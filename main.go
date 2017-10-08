@@ -12,7 +12,6 @@ const webPort = 8080;
 
 func main() {
 	log.Print("Scoring System Starting at",time.Now())
-
 	web := web.NewWeb(nil)
 	web.ServeWebInterface(webPort)
 

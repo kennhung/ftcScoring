@@ -24,6 +24,7 @@ func NewWeb(arena *arena.Arena) *Web {
 func (web *Web) ServeWebInterface(webPort int) {
 	http.Handle("/res/", http.StripPrefix("/res/", http.FileServer(http.Dir("res/"))))
 	http.Handle("/", web.newHandler())
+
 	// Start Server
 	log.Printf("Serving HTTP requests on port %d", webPort)
 	log.Print(fmt.Sprintf(":%d", webPort))
