@@ -1,3 +1,4 @@
+-- +goose Up
 CREATE TABLE event_settings (
   id                     INTEGER PRIMARY KEY,
   name                   VARCHAR(255),
@@ -5,3 +6,6 @@ CREATE TABLE event_settings (
   region                 VARCHAR(16),
   date                   DATETIME
 );
+
+-- +goose Down
+DROP TABLE event_settings;
