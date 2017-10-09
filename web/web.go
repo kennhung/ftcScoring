@@ -7,7 +7,6 @@ import (
 	"github.com/kennhung/ftcScoring/arena"
 	"bytes"
 	"github.com/kennhung/ftcScoring/webTemplate"
-	"time"
 	"fmt"
 )
 
@@ -17,7 +16,6 @@ type Web struct {
 
 func NewWeb(arena *arena.Arena) *Web {
 	web := &Web{arena: arena}
-	log.Print(web.arena)
 	return web
 }
 
@@ -31,16 +29,22 @@ func (web *Web) ServeWebInterface(webPort int) {
 	http.ListenAndServe(fmt.Sprintf(":%d", webPort), nil)
 }
 
+func handleWebErr(w http.ResponseWriter, err error) {
+	http.Error(w, "Internal server error: "+err.Error(), 500)
+}
+
 
 func (web *Web)newHandler() http.Handler {
 	router := mux.NewRouter()
 	router.HandleFunc("/", web.IndexHandler).Methods("GET")
+	router.HandleFunc("/setup/settings",web.setupsettingsGetHandler).Methods("GET")
+	router.HandleFunc("/setup/settings",web.setupsettingsPOSTHandler).Methods("POST")
 	return router
 }
 
 func (web *Web)IndexHandler(w http.ResponseWriter, r *http.Request){
 	buffer := new(bytes.Buffer)
-	template.Display(fmt.Sprint(time.Now()), buffer)
+	template.Index("Test",buffer)
 
 	w.Write(buffer.Bytes())
 }
