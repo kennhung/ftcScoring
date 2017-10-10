@@ -3,12 +3,13 @@
 // DO NOT EDIT!
 package template
 
+import "github.com/shiyanhui/hero"
+
 import (
 	"bytes"
 	"fmt"
 
 	"github.com/kennhung/ftcScoring/model"
-	"github.com/shiyanhui/hero"
 )
 
 func Setup_settings(eventSettings *model.EventSettings, buffer *bytes.Buffer) {
@@ -21,7 +22,17 @@ func Setup_settings(eventSettings *model.EventSettings, buffer *bytes.Buffer) {
     <!-- Bootstrap CSS -->
     <link href="/res/css/bootstrap.min.css" rel="stylesheet">
     <link href="/res/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
-    <!-- JS Scripts-->
+    <!-- JS Scripts -->
+
+    <!-- load jQuery 1.11.0 -->
+    <script src="/res/js/jquery_v1.11.0.min.js"></script>
+    <script src="/res/js/jquery.websocket-0.0.1.js"></script>
+    <script src="/res/js/jquery.json-2.4.min.js"></script>
+    <script src="/res/js/page_scripts/ScoringWebsocket.js"></script>
+    <script type="text/javascript">
+        $jQuery_1_11_0 = $.noConflict(true);
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -31,7 +42,21 @@ func Setup_settings(eventSettings *model.EventSettings, buffer *bytes.Buffer) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
+
+
+
+    <!-- Scoring System Script -->
     <script src="/res/js/ftcScoring.js"></script>
+
+    `)
+	buffer.WriteString(`
+<script src="/res/datePicker/picker.js"></script>
+<script src="/res/datePicker/picker.date.js"></script>
+<link href="/res/datePicker/classic.css" rel="stylesheet">
+<link href="/res/datePicker/classic.date.css" rel="stylesheet">
+`)
+
+	buffer.WriteString(`
 
     <title>`)
 	buffer.WriteString(`
@@ -95,33 +120,34 @@ Event Setting
                     </div>
                     <div class="form-group">
                         <label for="type">Event Type</label>
-                        <select name="type" class="form-control" id="type">
+                        <select  name="type" class="form-control" id="type">
                             `)
 
-	var types = []string{"Championship", "Qualifer", "Meet", "League Tournament", "Scrimmage", "Other"}
+	var types = []string{"Championship", "Qualifer",
+		"Meet", "League Tournament", "Scrimmage", "Other"}
 
 	for i := 0; i < len(types); i++ {
 		option := types[i]
 		if option == eventSettings.Type {
 
 			buffer.WriteString(`
-                            <option selected="selected">
-                                `)
+                                <option selected="selected">
+                                    `)
 		} else {
 
 			buffer.WriteString(`
-                            <option>
-                                `)
+                                <option>
+                                    `)
 		}
 		hero.EscapeHTML(option, buffer)
 		buffer.WriteString(`
-                            </option>
-                            `)
+                                </option>
+                                `)
 
 	}
 
 	buffer.WriteString(`
-                        </select>
+                        </select >
                     </div>
                     <div class="form-group">
                         `)
@@ -145,34 +171,17 @@ Event Setting
 	buffer.WriteString(`
                         <label for="date">Date</label>
                         <div class="input-group">
-                            <input name="date" id="date" type="text" class="form-control" placeholder="mm/dd/yyyy"
+                            <input name="date" id="date" type="text" class="form-control datepicker" placeholder="mm/dd/yyyy"
                                    value="`)
 	hero.EscapeHTML(timestr, buffer)
 	buffer.WriteString(`" data-toggle="popover">
-                            <span class="input-group-addon"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span></span>
+                            <span class="input-group-addon"><span class="oi oi-calendar" title="calendar"
+                                                                  aria-hidden="true"></span></span>
                         </div>
                     </div>
                     <button id="send" type="button" class="btn btn-primary">Save</button>
                 </form>
-                <!-- Modal -->
-                <div class="modal fade" id="wrongdatemodal" tabindex="-1" role="dialog" aria-labelledby="wrongdatemodal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Wrong Event Date format</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                ...
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -181,13 +190,19 @@ Event Setting
 </div>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
+        $('.datepicker').pickadate({
+            // Escape any “rule” characters with an exclamation mark (!).
+            format: 'mm/dd/yyyy',
+            formatSubmit: 'mm/dd/yyyy'
+        })
         $("#send").click(function () {
-            if(isValidDate($("#date").val())){
+            if (isValidDate($("#date").val())) {
                 $("#eventSetting").submit()
             }
-            else{
+            else {
                 console.log("error")
+                //TODO create error model
             }
         })
     })

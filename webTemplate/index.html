@@ -2,18 +2,27 @@
 
 <%~ "base.html" %>
 
+<%@ scoring_scripts { %>
+<script src="/res/js/page_scripts/match_play.js"></script>
+<%} %>
+
 <%@ body { %>
 <div class="row">
     <div class="col-lg-2">
     </div>
     <div class="col-lg">
-        <div class="card bg-light mb-3">
+        <div class="card ">
             <div class="card-header">
                 Dashboard
             </div>
             <div class="card-body">
                 This is some text within a card block.
                 <%= content %>
+
+                Event Name:<p id="evname"></p>
+                Event Region:<p id="evreg"></p>
+                Event Type:<p id="evtype"></p>
+                Event Date:<p id="evdate"></p>
             </div>
         </div>
     </div>

@@ -7,7 +7,17 @@
     <!-- Bootstrap CSS -->
     <link href="/res/css/bootstrap.min.css" rel="stylesheet">
     <link href="/res/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
-    <!-- JS Scripts-->
+    <!-- JS Scripts -->
+
+    <!-- load jQuery 1.11.0 -->
+    <script src="/res/js/jquery_v1.11.0.min.js"></script>
+    <script src="/res/js/jquery.websocket-0.0.1.js"></script>
+    <script src="/res/js/jquery.json-2.4.min.js"></script>
+    <script src="/res/js/page_scripts/ScoringWebsocket.js"></script>
+    <script type="text/javascript">
+        $jQuery_1_11_0 = $.noConflict(true);
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -17,7 +27,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
+
+
+
+    <!-- Scoring System Script -->
     <script src="/res/js/ftcScoring.js"></script>
+
+    <%@ scoring_scripts { %> <% } %>
 
     <title><%@ title { %> <% } %>- FTC Scoring</title>
 </head>

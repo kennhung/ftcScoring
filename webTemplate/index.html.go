@@ -19,7 +19,17 @@ func Index(content string, buffer *bytes.Buffer) {
     <!-- Bootstrap CSS -->
     <link href="/res/css/bootstrap.min.css" rel="stylesheet">
     <link href="/res/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
-    <!-- JS Scripts-->
+    <!-- JS Scripts -->
+
+    <!-- load jQuery 1.11.0 -->
+    <script src="/res/js/jquery_v1.11.0.min.js"></script>
+    <script src="/res/js/jquery.websocket-0.0.1.js"></script>
+    <script src="/res/js/jquery.json-2.4.min.js"></script>
+    <script src="/res/js/page_scripts/ScoringWebsocket.js"></script>
+    <script type="text/javascript">
+        $jQuery_1_11_0 = $.noConflict(true);
+    </script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
@@ -29,7 +39,18 @@ func Index(content string, buffer *bytes.Buffer) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
+
+
+
+    <!-- Scoring System Script -->
     <script src="/res/js/ftcScoring.js"></script>
+
+    `)
+	buffer.WriteString(`
+<script src="/res/js/page_scripts/match_play.js"></script>
+`)
+
+	buffer.WriteString(`
 
     <title>`)
 	buffer.WriteString(`
@@ -71,7 +92,7 @@ Dashboard
     <div class="col-lg-2">
     </div>
     <div class="col-lg">
-        <div class="card bg-light mb-3">
+        <div class="card ">
             <div class="card-header">
                 Dashboard
             </div>
@@ -80,6 +101,11 @@ Dashboard
                 `)
 	hero.EscapeHTML(content, buffer)
 	buffer.WriteString(`
+
+                Event Name:<p id="evname"></p>
+                Event Region:<p id="evreg"></p>
+                Event Type:<p id="evtype"></p>
+                Event Date:<p id="evdate"></p>
             </div>
         </div>
     </div>

@@ -39,6 +39,8 @@ func (web *Web)newHandler() http.Handler {
 	router.HandleFunc("/", web.IndexHandler).Methods("GET")
 	router.HandleFunc("/setup/settings",web.setupsettingsGetHandler).Methods("GET")
 	router.HandleFunc("/setup/settings",web.setupsettingsPOSTHandler).Methods("POST")
+	router.HandleFunc("/match/play",web.matchPlayHandler).Methods("GET")
+	router.HandleFunc("/match/play/socket",web.matchPlayWebsocketHandler).Methods("GET")
 	return router
 }
 

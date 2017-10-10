@@ -1,6 +1,20 @@
 <%: func Setup_settings(eventSettings *model.EventSettings,buffer *bytes.Buffer) %>
 
 <%~ "base.html" %>
+<%!
+import (
+    "bytes"
+    "github.com/kennhung/ftcScoring/model"
+    "fmt"
+)
+%>
+
+<%@ scoring_scripts { %>
+<script src="/res/datePicker/picker.js"></script>
+<script src="/res/datePicker/picker.date.js"></script>
+<link href="/res/datePicker/classic.css" rel="stylesheet">
+<link href="/res/datePicker/classic.date.css" rel="stylesheet">
+<%} %>
 
 <%@ body { %>
 <div class="row">
@@ -25,25 +39,26 @@
                     </div>
                     <div class="form-group">
                         <label for="type">Event Type</label>
-                        <select name="type" class="form-control" id="type">
+                        <select  name="type" class="form-control" id="type">
                             <%
-                            var types = []string{"Championship","Qualifer","Meet","League Tournament","Scrimmage","Other"}
+                            var types = []string{"Championship","Qualifer",
+                            "Meet","League Tournament","Scrimmage","Other"}
 
-                            for i:=0;i<len(types);i++{
-                                option := types[i]
-                                if option == eventSettings.Type{
-                            %>
-                            <option selected="selected">
-                                <%}else{
+                            for i:=0;i < len(types);i++{
+                                    option :=types[i]
+                                    if option== eventSettings.Type{
+                                    %>
+                                <option selected="selected">
+                                    <%}else{
+                                    %>
+                                <option>
+                                    <%} %>
+                                    <%= option %>
+                                </option>
+                                <%
+                                }
                                 %>
-                            <option>
-                                <%} %>
-                            <%= option %>
-                            </option>
-                            <%
-                            }
-                            %>
-                        </select>
+                        </select >
                     </div>
                     <div class="form-group">
                         <%
@@ -65,32 +80,15 @@
                         %>
                         <label for="date">Date</label>
                         <div class="input-group">
-                            <input name="date" id="date" type="text" class="form-control" placeholder="mm/dd/yyyy"
+                            <input name="date" id="date" type="text" class="form-control datepicker" placeholder="mm/dd/yyyy"
                                    value="<%= timestr%>" data-toggle="popover">
-                            <span class="input-group-addon"><span class="oi oi-calendar" title="calendar" aria-hidden="true"></span></span>
+                            <span class="input-group-addon"><span class="oi oi-calendar" title="calendar"
+                                                                  aria-hidden="true"></span></span>
                         </div>
                     </div>
                     <button id="send" type="button" class="btn btn-primary">Save</button>
                 </form>
-                <!-- Modal -->
-                <div class="modal fade" id="wrongdatemodal" tabindex="-1" role="dialog" aria-labelledby="wrongdatemodal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Wrong Event Date format</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                ...
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -99,12 +97,17 @@
 </div>
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function () {
+        $('.datepicker').pickadate({
+            // Escape any “rule” characters with an exclamation mark (!).
+            format: 'mm/dd/yyyy',
+            formatSubmit: 'mm/dd/yyyy'
+        })
         $("#send").click(function () {
-            if(isValidDate($("#date").val())){
+            if (isValidDate($("#date").val())) {
                 $("#eventSetting").submit()
             }
-            else{
+            else {
                 console.log("error")
                 //TODO create error model
             }
