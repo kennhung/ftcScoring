@@ -9,14 +9,14 @@ type Match struct {
 	Id               int
 	Type             string
 	Time             time.Time
-	red1            int
-	red1notshow     bool
-	red2            int
-	red2notshow     bool
-	blue1           int
-	blue1notshow    bool
-	blue2           int
-	blue2notshow    bool
+	Red1            int
+	Red1notshow     bool
+	Red2            int
+	Red2notshow     bool
+	Blue1           int
+	Blue1notshow    bool
+	Blue2           int
+	Blue2notshow    bool
 	Status           string
 	StartedAt        time.Time
 	Winner           string

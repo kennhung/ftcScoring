@@ -1,4 +1,4 @@
-package scoring
+package play
 
 type Score struct {
 	AutoJewels      int

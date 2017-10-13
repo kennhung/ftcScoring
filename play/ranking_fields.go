@@ -1,4 +1,4 @@
-package scoring
+package play
 
 import "math/rand"
 

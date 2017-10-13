@@ -39,8 +39,10 @@ func (web *Web)newHandler() http.Handler {
 	router.HandleFunc("/", web.IndexHandler).Methods("GET")
 	router.HandleFunc("/setup/settings",web.setupsettingsGetHandler).Methods("GET")
 	router.HandleFunc("/setup/settings",web.setupsettingsPOSTHandler).Methods("POST")
+	router.HandleFunc("/setup/teams",web.teamsGetHandler).Methods("GET")
 	router.HandleFunc("/match/play",web.matchPlayHandler).Methods("GET")
 	router.HandleFunc("/match/play/socket",web.matchPlayWebsocketHandler).Methods("GET")
+	router.HandleFunc("/match/play/{matchId}/load", web.matchPlayLoadHandler).Methods("GET")
 	return router
 }
 

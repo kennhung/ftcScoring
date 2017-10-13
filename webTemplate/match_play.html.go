@@ -3,11 +3,7 @@
 // DO NOT EDIT!
 package template
 
-import (
-	"bytes"
-
-	"github.com/shiyanhui/hero"
-)
+import "bytes"
 
 func Match_Play(tempstr string, buffer *bytes.Buffer) {
 	buffer.WriteString(`<!DOCTYPE html>
@@ -48,6 +44,7 @@ func Match_Play(tempstr string, buffer *bytes.Buffer) {
     `)
 	buffer.WriteString(`
 <script src="/res/js/page_scripts/match_play.js"></script>
+<script src="/res/js/page_scripts/match_timing.js"></script>
 `)
 
 	buffer.WriteString(`
@@ -67,12 +64,22 @@ func Match_Play(tempstr string, buffer *bytes.Buffer) {
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto" id="navbar-menu">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSetup" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             Setup
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
+                            <a class="dropdown-item" href="/setup/teams">Teams</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMatch" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Match
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/match/play">Play</a>
                         </div>
                     </li>
                 </ul>
@@ -90,38 +97,17 @@ func Match_Play(tempstr string, buffer *bytes.Buffer) {
     <div class="col-lg">
         <div class="card bg-light mb-3">
             <div class="card-header">
-                Modal
+                Match Status
             </div>
             <div class="card-body">
-                <button type="button" class="btn btn-outline-warning" id="toggle_modal">
-                    Launch demo modal
-                </button>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        `)
-	hero.EscapeHTML(tempstr, buffer)
-	buffer.WriteString(`
-                        Event Name:<p id="evname"></p>
-                        Event Region:<p id="evreg"></p>
-                        Event Type:<p id="evtype"></p>
-                        Event Date:<p id="evdate"></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
+                matchState: <span id="matchState"></span>
+                matchTime: <span id="matchTime"></span>
+
+                <button class="btn btn-outline-primary" id="startMatch" onclick="startMatch();">Start Match</button>
+                <button class="btn btn-outline-warning" id="togglePause" onclick="togglePause();">Pause Match</button>
+                <button class="btn btn-outline-danger" id="abortMatch" onclick="abortMatch();">AbortMatch</button>
+                <button class="btn btn-outline-warning" id="discardResults" onclick="discardResults();">Discard Results</button>
+                <button class="btn btn-outline-info" id="commitResults" onclick="commitResults();">Commit Results</button>
             </div>
         </div>
     </div>
@@ -131,12 +117,7 @@ func Match_Play(tempstr string, buffer *bytes.Buffer) {
 
 <script>
     $(function () {
-        $("#toggle_modal").click(function () {
-            $("#exampleModal").modal({
-                keyboard: true,
-                show: true
-            })
-        })
+
     })
 </script>
 

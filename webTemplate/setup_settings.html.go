@@ -77,12 +77,22 @@ Event Setting
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto" id="navbar-menu">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSetup" data-toggle="dropdown"
                            aria-haspopup="true" aria-expanded="false">
                             Setup
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
+                            <a class="dropdown-item" href="/setup/teams">Teams</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMatch" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Match
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/match/play">Play</a>
                         </div>
                     </li>
                 </ul>
@@ -103,6 +113,9 @@ Event Setting
                 Event Settings
             </div>
             <div class="card-body">
+                <div class="alert alert-warning fade" role="alert" id="wrongDate" style="display: none;">
+                    Wrong Date format
+                </div>
                 <form id="eventSetting" action="/setup/settings" method="POST" novalidate>
                     <div class="form-group">
                         <label for="name">Event Name</label>
@@ -175,7 +188,7 @@ Event Setting
                                    value="`)
 	hero.EscapeHTML(timestr, buffer)
 	buffer.WriteString(`" data-toggle="popover">
-                            <span class="input-group-addon"><span class="oi oi-calendar" title="calendar"
+                            <span class="input-group-addon"  id="openPicker"><span class="oi oi-calendar" title="calendar"
                                                                   aria-hidden="true"></span></span>
                         </div>
                     </div>
@@ -191,18 +204,25 @@ Event Setting
 
 <script>
     $(document).ready(function () {
-        $('.datepicker').pickadate({
+        $('.alert').hide()
+        var $input = $('.datepicker').pickadate({
             // Escape any “rule” characters with an exclamation mark (!).
             format: 'mm/dd/yyyy',
-            formatSubmit: 'mm/dd/yyyy'
+            formatSubmit: 'mm/dd/yyyy',
+            editable :true
         })
+        var picker = $input.pickadate('picker')
+
+        $("#openPicker").click(function () {
+            picker.open(false)
+        })
+
         $("#send").click(function () {
             if (isValidDate($("#date").val())) {
                 $("#eventSetting").submit()
             }
             else {
-                console.log("error")
-                //TODO create error model
+                $("#wrongDate").removeClass("fade").show()
             }
         })
     })

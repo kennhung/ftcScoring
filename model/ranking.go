@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/kennhung/ftcScoring/scoring"
+	"github.com/kennhung/ftcScoring/play"
 )
 
 type RankingDb struct {
@@ -11,7 +11,7 @@ type RankingDb struct {
 	RankingFieldsJson string
 }
 
-func (database *Database) CreateRanking(ranking *scoring.Ranking) error {
+func (database *Database) CreateRanking(ranking *play.Ranking) error {
 	rankingDb, err := serializeRanking(ranking)
 	if err != nil {
 		return err
@@ -19,7 +19,7 @@ func (database *Database) CreateRanking(ranking *scoring.Ranking) error {
 	return database.rankingMap.Insert(rankingDb)
 }
 
-func (database *Database) GetRankingForTeam(teamId int) (*scoring.Ranking, error) {
+func (database *Database) GetRankingForTeam(teamId int) (*play.Ranking, error) {
 	rankingDb := new(RankingDb)
 	err := database.rankingMap.Get(rankingDb, teamId)
 	if err != nil && err.Error() == "sql: no rows in result set" {
@@ -32,7 +32,7 @@ func (database *Database) GetRankingForTeam(teamId int) (*scoring.Ranking, error
 	return ranking, err
 }
 
-func (database *Database) SaveRanking(ranking *scoring.Ranking) error {
+func (database *Database) SaveRanking(ranking *play.Ranking) error {
 	rankingDb, err := serializeRanking(ranking)
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (database *Database) SaveRanking(ranking *scoring.Ranking) error {
 	return err
 }
 
-func (database *Database) DeleteRanking(ranking *scoring.Ranking) error {
+func (database *Database) DeleteRanking(ranking *play.Ranking) error {
 	rankingDb, err := serializeRanking(ranking)
 	if err != nil {
 		return err
@@ -54,13 +54,13 @@ func (database *Database) TruncateRankings() error {
 	return database.rankingMap.TruncateTables()
 }
 
-func (database *Database) GetAllRankings() ([]scoring.Ranking, error) {
+func (database *Database) GetAllRankings() ([]play.Ranking, error) {
 	var rankingDbs []RankingDb
 	err := database.rankingMap.Select(&rankingDbs, "SELECT * FROM rankings ORDER BY rank")
 	if err != nil {
 		return nil, err
 	}
-	var rankings []scoring.Ranking
+	var rankings []play.Ranking
 	for _, rankingDb := range rankingDbs {
 		ranking, err := rankingDb.deserialize()
 		if err != nil {
@@ -72,7 +72,7 @@ func (database *Database) GetAllRankings() ([]scoring.Ranking, error) {
 }
 
 // Deletes the existing rankings and inserts the given ones as a replacement, in a single transaction.
-func (database *Database) ReplaceAllRankings(rankings scoring.Rankings) error {
+func (database *Database) ReplaceAllRankings(rankings play.Rankings) error {
 	transaction, err := database.rankingMap.Begin()
 	if err != nil {
 		return err
@@ -101,7 +101,7 @@ func (database *Database) ReplaceAllRankings(rankings scoring.Rankings) error {
 }
 
 // Converts the nested struct MatchResult to the DB version that has JSON fields.
-func serializeRanking(ranking *scoring.Ranking) (*RankingDb, error) {
+func serializeRanking(ranking *play.Ranking) (*RankingDb, error) {
 	rankingDb := RankingDb{TeamId: ranking.TeamId, Rank: ranking.Rank}
 	if err := toJson(&rankingDb.RankingFieldsJson, ranking.RankingFields); err != nil {
 		return nil, err
@@ -110,8 +110,8 @@ func serializeRanking(ranking *scoring.Ranking) (*RankingDb, error) {
 }
 
 // Converts the DB Ranking with JSON fields to the nested struct version.
-func (rankingDb *RankingDb) deserialize() (*scoring.Ranking, error) {
-	ranking := scoring.Ranking{TeamId: rankingDb.TeamId, Rank: rankingDb.Rank}
+func (rankingDb *RankingDb) deserialize() (*play.Ranking, error) {
+	ranking := play.Ranking{TeamId: rankingDb.TeamId, Rank: rankingDb.Rank}
 	if err := json.Unmarshal([]byte(rankingDb.RankingFieldsJson), &ranking.RankingFields); err != nil {
 		return nil, err
 	}

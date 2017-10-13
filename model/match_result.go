@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	"github.com/kennhung/ftcScoring/scoring"
+	"github.com/kennhung/ftcScoring/play"
 )
 
 type MatchResult struct {
@@ -10,8 +10,8 @@ type MatchResult struct {
 	MatchId    int
 	PlayNumber int
 	MatchType  string
-	RedScore   *scoring.Score
-	BlueScore  *scoring.Score
+	RedScore   *play.Score
+	BlueScore  *play.Score
 	RedCards   map[string]string
 	BlueCards  map[string]string
 }
@@ -30,8 +30,8 @@ type MatchResultDb struct {
 // Returns a new match result object with empty slices instead of nil.
 func NewMatchResult() *MatchResult {
 	matchResult := new(MatchResult)
-	matchResult.RedScore = new(scoring.Score)
-	matchResult.BlueScore = new(scoring.Score)
+	matchResult.RedScore = new(play.Score)
+	matchResult.BlueScore = new(play.Score)
 	matchResult.RedCards = make(map[string]string)
 	matchResult.BlueCards = make(map[string]string)
 	return matchResult
@@ -90,12 +90,12 @@ func (database *Database) TruncateMatchResults() error {
 }
 
 // Calculates and returns the summary fields used for ranking and display for the red alliance.
-func (matchResult *MatchResult) RedScoreSummary() *scoring.ScoreSummary {
+func (matchResult *MatchResult) RedScoreSummary() *play.ScoreSummary {
 	return matchResult.RedScore.Summarize(matchResult.BlueScore.Penalties, matchResult.MatchType)
 }
 
 // Calculates and returns the summary fields used for ranking and display for the blue alliance.
-func (matchResult *MatchResult) BlueScoreSummary() *scoring.ScoreSummary {
+func (matchResult *MatchResult) BlueScoreSummary() *play.ScoreSummary {
 	return matchResult.BlueScore.Summarize(matchResult.RedScore.Penalties, matchResult.MatchType)
 }
 

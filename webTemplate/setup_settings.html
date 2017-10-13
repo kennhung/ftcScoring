@@ -26,6 +26,9 @@ import (
                 Event Settings
             </div>
             <div class="card-body">
+                <div class="alert alert-warning fade" role="alert" id="wrongDate" style="display: none;">
+                    Wrong Date format
+                </div>
                 <form id="eventSetting" action="/setup/settings" method="POST" novalidate>
                     <div class="form-group">
                         <label for="name">Event Name</label>
@@ -82,7 +85,7 @@ import (
                         <div class="input-group">
                             <input name="date" id="date" type="text" class="form-control datepicker" placeholder="mm/dd/yyyy"
                                    value="<%= timestr%>" data-toggle="popover">
-                            <span class="input-group-addon"><span class="oi oi-calendar" title="calendar"
+                            <span class="input-group-addon"  id="openPicker"><span class="oi oi-calendar" title="calendar"
                                                                   aria-hidden="true"></span></span>
                         </div>
                     </div>
@@ -98,18 +101,25 @@ import (
 
 <script>
     $(document).ready(function () {
-        $('.datepicker').pickadate({
+        $('.alert').hide()
+        var $input = $('.datepicker').pickadate({
             // Escape any “rule” characters with an exclamation mark (!).
             format: 'mm/dd/yyyy',
-            formatSubmit: 'mm/dd/yyyy'
+            formatSubmit: 'mm/dd/yyyy',
+            editable :true
         })
+        var picker = $input.pickadate('picker')
+
+        $("#openPicker").click(function () {
+            picker.open(false)
+        })
+
         $("#send").click(function () {
             if (isValidDate($("#date").val())) {
                 $("#eventSetting").submit()
             }
             else {
-                console.log("error")
-                //TODO create error model
+                $("#wrongDate").removeClass("fade").show()
             }
         })
     })
