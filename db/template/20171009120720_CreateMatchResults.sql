@@ -1,5 +1,5 @@
 -- +goose Up
-CREATE TABLE match_result (
+CREATE TABLE match_results (
   id            INTEGER PRIMARY KEY,
   matchid       INT,
   playnumber    INT,
