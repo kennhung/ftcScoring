@@ -13,7 +13,7 @@ func (web *Web) setupscheduleGETHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	matches, err := scheduling.BuildRandomSchedule(teams, 3, "test")
+	matches, err := scheduling.BuildRandomSchedule(teams, 3, "practice")
 	if err != nil {
 		handleWebErr(w, err)
 		return

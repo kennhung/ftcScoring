@@ -11,33 +11,20 @@ function InitMaxandMin() {
 }
 
 var handleScore = function(data) {
-    // Update autonomous period values.
-    var score = data.Score.CurrentScore;
-    $("#autoMobility").text(score.AutoMobility);
 
-    // Update component visibility.
-    if (!data.AutoCommitted) {
-        $("#autoScoring").fadeTo(0, 1);
-        $("#teleopScoring").hide();
-        $("#waitingMessage").hide();
-        scoreCommitted = false;
-    } else if (!data.Score.TeleopCommitted) {
-        $("#autoScoring").fadeTo(0, 0.25);
-        $("#teleopScoring").show();
-        $("#waitingMessage").hide();
-        scoreCommitted = false;
-    } else {
-        $("#autoScoring").hide();
-        $("#teleopScoring").hide();
-        $("#commitMatchScore").hide();
-        $("#waitingMessage").show();
-        scoreCommitted = true;
-    }
+    //Update RedScore
+    var RedScore = data.RedScore;
+    $("#redScoreForm #AutoJewels").val(RedScore.AutoJewels)
+    $("#redScoreForm #AutoCryptobox").val(RedScore.AutoCryptobox)
+    $("#redScoreForm #CryptoboxKeys").val(RedScore.CryptoboxKeys)
+    $("#redScoreForm #RobotInSafeZone").val(RedScore.RobotInSafeZone)
+
+    scoreCommitted = false;
 };
 
 // Handles a websocket message to update the match status.
 var handleMatchTime = function(data) {
-    if (matchStates[data.MatchState] == "POST_MATCH" && !scoreCommitted) {
+    if (!scoreCommitted) {
         $("#scoringCard").show();
     } else {
         $("#scoringCard").hide();
@@ -51,7 +38,7 @@ var commitMatchScore = function() {
 
 $(function() {
     // Set up the websocket back to the server.
-    websocket = new ScoringWebsocket("/displays/scoring/websocket", {
+    websocket = new ScoringWebsocket("/match/scoring/websocket", {
         score: function(event) { handleScore(event.data); },
         matchTime: function(event) { handleMatchTime(event.data); }
 

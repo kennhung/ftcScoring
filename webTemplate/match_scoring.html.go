@@ -49,6 +49,7 @@ func Match_Scoring(allMatchs [3][]model.Match, buffer *bytes.Buffer) {
     `)
 	buffer.WriteString(`
 <script src="/res/js/page_scripts/match_scoring.js"></script>
+<script src="/res/js/page_scripts/match_timing.js"></script>
 `)
 
 	buffer.WriteString(`

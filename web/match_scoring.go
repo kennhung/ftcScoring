@@ -7,6 +7,9 @@ import (
 	"github.com/kennhung/ftcScoring/model"
 	"log"
 	"github.com/kennhung/ftcScoring/play"
+	"fmt"
+	"io"
+	"github.com/kennhung/ftcScoring/arena"
 )
 
 func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,19 +43,9 @@ func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Request) {
-
-	currentid := web.arena.CurrentMatch.Id
-
-	matchResult, err := web.arena.Database.GetMatchResultForMatch(currentid)
-	matchResult.RedScore.RelicsZ3 = 0;
-	if err != nil {
-		handleWebErr(w, err);
-		return
-	}
-
 	websocket, err := NewWebsocket(w, r)
 	if err != nil {
-		handleWebErr(w, err)
+		log.Printf("Websocket error: %s", err)
 		return
 	}
 
@@ -68,12 +61,13 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 	data := struct {
 		RedScore  *play.Score
 		BlueScore *play.Score
-	}{}
+	}{web.arena.RedScore,web.arena.BlueScore}
 	err = websocket.Write("score", data)
 	if err != nil {
 		log.Printf("Websocket error: %s", err)
 		return
 	}
+
 	err = websocket.Write("matchTime", MatchTimeMessage{web.arena.MatchState, int(web.arena.MatchTimeSec())})
 	if err != nil {
 		log.Printf("Websocket error: %s", err)
@@ -112,5 +106,43 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 			}
 		}
 	}()
+
+	for {
+		messageType, data, err := websocket.Read()
+		if err != nil {
+			if err == io.EOF {
+				// Client has closed the connection; nothing to do here.
+				return
+			}
+			log.Printf("Websocket error: %s", err)
+			return
+		}
+
+		switch messageType {
+		case "commitMatch":
+			if web.arena.MatchState != arena.PostMatch {
+				// Don't allow committing the score until the match is over.
+				websocket.WriteError("Cannot commit score: Match is not over.")
+				continue
+			}
+
+			web.arena.ScoringStatusChannel.Notify(nil)
+		default:
+			websocket.WriteError(fmt.Sprintf("Invalid message type '%s'.", messageType))
+			continue
+		}
+
+
+		// Send out the score again after handling the command, as it most likely changed as a result.
+		data = struct {
+			RedScore  *play.Score
+			BlueScore *play.Score
+		}{}
+		err = websocket.Write("score", data)
+		if err != nil {
+			log.Printf("Websocket error: %s", err)
+			return
+		}
+	}
 
 }

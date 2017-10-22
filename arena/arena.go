@@ -22,6 +22,8 @@ type Arena struct {
 	LastMatchUpdateTime      time.Time
 	MatchRemainTime          *play.MatchTime
 	Teams                    map[string]*model.Team
+	RedScore                 *play.Score
+	BlueScore                *play.Score
 	PrevMatchTimeSec         float64
 	AudienceDisplayScreen    string
 	SavedMatch               *model.Match
@@ -147,6 +149,9 @@ func (arena *Arena) LoadMatch(match *model.Match) error {
 	}
 
 	arena.MatchResetTimer()
+
+	arena.RedScore = play.NewScore()
+	arena.BlueScore = play.NewScore()
 
 	// Notify any listeners about the new match.
 	arena.MatchLoadTeamsChannel.Notify(nil)

@@ -54,3 +54,8 @@ func (score *Score) Summarize(opponentPenalties []int, matchType string) *ScoreS
 
 	return summary
 }
+
+func NewScore() *Score {
+	return &Score{ElimDisq: false}
+}
+

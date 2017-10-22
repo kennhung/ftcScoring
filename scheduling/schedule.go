@@ -43,7 +43,8 @@ func BuildRandomSchedule(teams []model.Team, MatchesPerTeam int, Type string) ([
 		match.Red2 = teams[ids[1]].Id;
 		match.Blue1 = teams[ids[2]].Id;
 		match.Blue2 = teams[ids[3]].Id;
-		match.DisplayName = fmt.Sprint(num)
+		match.Type = Type
+		match.DisplayName = fmt.Sprint(num+1)
 		i = i + 4
 		matches[num] = match
 	}
