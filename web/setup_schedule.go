@@ -3,7 +3,6 @@ package web
 import (
 	"net/http"
 	"github.com/kennhung/ftcScoring/scheduling"
-	"log"
 )
 
 func (web *Web) setupscheduleGETHandler(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +20,6 @@ func (web *Web) setupscheduleGETHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	for _, match := range matches {
-		log.Print(match)
 		err = web.arena.Database.CreateMatch(&match)
 		if err != nil {
 			handleWebErr(w, err)
