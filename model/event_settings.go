@@ -5,11 +5,13 @@ import (
 )
 
 type EventSettings struct {
-	Id     int
-	Name   string
-	Type   string
-	Region string
-	Date   time.Time
+	Id                     int
+	Name                   string
+	Type                   string
+	Region                 string
+	Date                   time.Time
+	DisplayBackgroundColor string
+	DisplayOverlayMode     bool
 }
 
 const eventSettingsId = 0
@@ -21,6 +23,9 @@ func (database *Database) GetEventSettings() (*EventSettings, error) {
 		// Database record doesn't exist yet; create it now.
 		eventSettings.Name = "Untitled Event"
 		eventSettings.Region = "Taiwan"
+		eventSettings.DisplayBackgroundColor = "#00ff00"
+		eventSettings.DisplayOverlayMode = true
+		eventSettings.Date = time.Now()
 		err = database.eventSettingsMap.Insert(eventSettings)
 		if err != nil {
 			return nil, err

@@ -14,31 +14,32 @@ const (
 )
 
 type Arena struct {
-	Database               *model.Database
-	EventSettings          *model.EventSettings
-	CurrentMatch           *model.Match
-	MatchState             int
-	PrevMatchState         int
-	LastMatchUpdateTime    time.Time
-	MatchRemainTime        *play.MatchTime
-	Teams                  map[string]*model.Team
-	PrevMatchTimeSec       float64
-	AudienceDisplayScreen  string
-	SavedMatch             *model.Match
-	SavedMatchResult       *model.MatchResult
-	FieldTestMode          string
-	matchAborted           bool
-	MatchPaused            bool
-	MuteMatchSounds        bool
-	MatchStateChannel      *Channel
-	MatchTimeChannel       *Channel
-	MatchLoadTeamsChannel  *Channel
-	ScoringStatusChannel   *Channel
-	ScorePostedChannel     *Channel
-	AudienceDisplayChannel *Channel
-	PlaySoundChannel       *Channel
-	ReloadDisplaysChannel  *Channel
-	PitDisplaysChannel     *Channel
+	Database                 *model.Database
+	EventSettings            *model.EventSettings
+	CurrentMatch             *model.Match
+	MatchState               int
+	PrevMatchState           int
+	LastMatchUpdateTime      time.Time
+	MatchRemainTime          *play.MatchTime
+	Teams                    map[string]*model.Team
+	PrevMatchTimeSec         float64
+	AudienceDisplayScreen    string
+	SavedMatch               *model.Match
+	SavedMatchResult         *model.MatchResult
+	FieldTestMode            string
+	matchAborted             bool
+	MatchPaused              bool
+	MuteMatchSounds          bool
+	MatchStateChannel        *Channel
+	MatchTimeChannel         *Channel
+	MatchLoadTeamsChannel    *Channel
+	ScoringStatusChannel     *Channel
+	ScorePostedChannel       *Channel
+	AudienceDisplayChannel   *Channel
+	PlaySoundChannel         *Channel
+	ReloadDisplaysChannel    *Channel
+	PitDisplaysChannel       *Channel
+	AllianceSelectionChannel *Channel
 }
 
 type ArenaStatus struct {
@@ -90,6 +91,7 @@ func NewArena(dbPath string) (*Arena, error) {
 	arena.ReloadDisplaysChannel = NewChannel()
 	arena.PitDisplaysChannel = NewChannel()
 	arena.PlaySoundChannel = NewChannel()
+	arena.AllianceSelectionChannel = NewChannel()
 
 	// Load empty match first.
 	arena.MatchState = PreMatch
@@ -242,10 +244,14 @@ func (arena *Arena) StartMatch() error {
 	if err == nil {
 		// Save the match start time to the database for posterity.
 		arena.CurrentMatch.StartedAt = time.Now()
-		if arena.CurrentMatch.Type != "test" {
+		if arena.CurrentMatch.Type != "empty" {
 			arena.Database.SaveMatch(arena.CurrentMatch)
 		}
 		arena.MatchState = StartMatch
+	}
+
+	if !arena.MuteMatchSounds {
+		arena.PlaySoundChannel.Notify("match-start")
 	}
 	return err
 }
@@ -277,21 +283,18 @@ func (arena *Arena) AbortMatch() error {
 func (arena *Arena) PauseMatch() error {
 	if arena.MatchState == PreMatch || arena.MatchState == PostMatch {
 		return fmt.Errorf("Cannot pause match when it is not in progress.")
-	} else if arena.MatchPaused{
+	} else if arena.MatchPaused {
 		return fmt.Errorf("Match had been paused.")
 	}
 	arena.MatchPaused = true
-	if !arena.MuteMatchSounds {
-		arena.PlaySoundChannel.Notify("match-pause")
-	}
 	return nil
 }
 
 // Resume the current Match.
-func (arena *Arena) ResumeMatch() error{
+func (arena *Arena) ResumeMatch() error {
 	if arena.MatchState == PreMatch || arena.MatchState == PostMatch {
 		return fmt.Errorf("Cannot resume match when it is not in progress.")
-	}else if !arena.MatchPaused{
+	} else if !arena.MatchPaused {
 		return fmt.Errorf("Match is not paused.")
 	}
 
@@ -321,30 +324,42 @@ func (arena *Arena) Update() {
 	// Decide what state the program should run, depending on where we are in the match.
 	switch arena.MatchState {
 	case PreMatch:
-
+		matchTimeSec = arena.MatchRemainTime.AutoRemainTime + arena.MatchRemainTime.TeleopRemainTime + arena.MatchRemainTime.EndgameRemainTime
+		arena.PrevMatchTimeSec = -1
 	case StartMatch:
 		arena.MatchState = AutoPeriod
+		matchTimeSec = arena.MatchRemainTime.AutoRemainTime + arena.MatchRemainTime.TeleopRemainTime + arena.MatchRemainTime.EndgameRemainTime
 		arena.PrevMatchTimeSec = -1
 		arena.AudienceDisplayScreen = "matchTimer"
 	case AutoPeriod:
 		if matchTimeSec <= 0 {
 			arena.MatchState = PickupPeriod
-
+			if !arena.MuteMatchSounds {
+				arena.PlaySoundChannel.Notify("auto-end")
+			}
 		}
 
 	case PickupPeriod:
 		if matchTimeSec <= 0 {
 			arena.MatchState = TeleopPeriod
-
+			if !arena.MuteMatchSounds {
+				arena.PlaySoundChannel.Notify("match-resume")
+			}
 		}
 	case TeleopPeriod:
 		if matchTimeSec <= 0 {
 			arena.MatchState = EndgamePeriod
-
+			if !arena.MuteMatchSounds {
+				arena.PlaySoundChannel.Notify("match-endgame")
+			}
 		}
 	case EndgamePeriod:
 		if matchTimeSec <= 0 {
 			arena.MatchState = PostMatch
+			if !arena.MuteMatchSounds {
+				arena.PlaySoundChannel.Notify("match-end")
+			}
+			arena.MatchTimeChannel.Notify(int(arena.MatchRemainTime.AutoRemainTime + arena.MatchRemainTime.TeleopRemainTime + arena.MatchRemainTime.EndgameRemainTime))
 			go func() {
 				// Leave the scores on the screen briefly at the end of the match.
 				time.Sleep(time.Second * matchEndScoreDelaySec)
@@ -356,7 +371,11 @@ func (arena *Arena) Update() {
 	}
 
 	if int(matchTimeSec) != int(arena.PrevMatchTimeSec) {
-		arena.MatchTimeChannel.Notify(int(matchTimeSec))
+		if arena.MatchState == PickupPeriod {
+			arena.MatchTimeChannel.Notify(int(arena.MatchRemainTime.PickupRemainTime))
+		} else {
+			arena.MatchTimeChannel.Notify(int(arena.MatchRemainTime.AutoRemainTime + arena.MatchRemainTime.TeleopRemainTime + arena.MatchRemainTime.EndgameRemainTime))
+		}
 	}
 	arena.PrevMatchTimeSec = matchTimeSec
 }

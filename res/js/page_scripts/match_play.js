@@ -83,8 +83,6 @@ var handleStatus = function (data) {
 
     isPaused = data.IsPaused;
 
-    console.log(data.IsPaused);
-
     if (isPaused) {
         $("#togglePause").text("Resume Match")
     }

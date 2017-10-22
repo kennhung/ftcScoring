@@ -16,7 +16,7 @@ var MatchTiming = struct {
 	PickupDurationSec   int
 	TeleopDurationSec  int
 	EndgameTimeLeftSec int
-}{15, 8, 135, 30}
+}{30, 8, 90, 30}
 
 func GetMatchEndTime(matchStartTime time.Time) time.Time {
 	return matchStartTime.Add(time.Duration(MatchTiming.AutoDurationSec+MatchTiming.PickupDurationSec+

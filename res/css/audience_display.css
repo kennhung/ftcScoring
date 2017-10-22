@@ -1,0 +1,416 @@
+/*
+  Copyright 2014 Team 254. All Rights Reserved.
+  Author: pat@patfairbank.com (Patrick Fairbank)
+*/
+
+html {
+  cursor: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  overflow: hidden;
+}
+#centering {
+  position: absolute;
+  left: 50%;
+  bottom: -340px;
+}
+#matchOverlay {
+  position: relative;
+  left: -50%;
+  bottom: 70px;
+  margin: 0 auto;
+  height: 104px;
+  background-color: #fff;
+  border: 1px solid #222;
+  color: #222;
+  font-size: 22px;
+}
+.teams {
+  width: 40px;
+  height: 100%;
+  line-height: 26px;
+  text-align: center;
+  display: table;
+  font-family: "FuturaLT";
+}
+.valign-cell {
+  display: table-cell;
+  vertical-align: middle;
+}
+#redTeams {
+  float: left;
+  border-right: 1px solid #222;
+}
+#blueTeams {
+  float: right;
+  border-left: 1px solid #222;
+}
+.score {
+  width: 0px;
+  height: 100%;
+  float: left;
+}
+#redScore {
+  float: left;
+  background-color: #ff4444;
+}
+#blueScore {
+  float: left;
+  background-color: #2080ff;
+}
+#eventMatchInfo {
+  display: none;
+  position: absolute;
+  right: -1px;
+  left: -1px;
+  height: 30px;
+  bottom: 0px;
+  line-height: 30px;
+  background-color: #444;
+  border: 1px solid #222;
+  padding: 0px 5px;
+  font-family: "FuturaLT";
+  font-size: 15px;
+  color: #fff;
+  z-index: -1;
+}
+#matchCircle {
+  position: absolute;
+  left: -75px;
+  bottom: 50px;
+  margin: 0 auto;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  background-color: #fff;
+  border: 1px solid #222;
+}
+.score-number {
+  float: left;
+  width: 45%;
+  margin: 0px 5px;
+  text-align: center;
+  font-family: "FuturaLTBold";
+  font-size: 55px;
+  line-height: 104px;
+  color: #fff;
+  opacity: 0;
+}
+.score-fields {
+  float: left;
+  display: block;
+  font-size: 20px;
+  font-family: "FuturaLTBold";
+  color: #fff;
+  opacity: 0;
+}
+.score-fields-icons {
+  line-height: 99px;
+  text-align: center;
+  width: 30px;
+}
+.score-fields-icons span {
+  display: inline-block;
+  line-height: 33px;
+}
+.score-fields-text {
+  width: 19px;
+}
+.score-fields-text span {
+  display: inline-block;
+  line-height: 34px;
+  padding: 0;
+}
+#logo {
+  position: relative;
+  top: 30px;
+  height: 85px;
+}
+#matchTime {
+  position: relative;
+  top: 6px;
+  height: 60px;
+  color: #222;
+  font-family: "FuturaLTBold";
+  font-size: 32px;
+  opacity: 0;
+}
+#blindsContainer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.blinds {
+  position: fixed;
+  top: 0;
+  background-size: 200%;
+  height: 100%;
+  width: 50%;
+  overflow: hidden;
+}
+.blinds.left {
+  background-position: left;
+  left: -50%;
+}
+.blinds.right {
+  background-position: right;
+  right: -50%;
+}
+.blinds.full {
+  width: 100%;
+  background-position: center;
+  background-size: 100%;
+}
+.blinds.background {
+  background-image: url("/static/img/endofmatch-bg.png");
+}
+.blindsCenter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto auto;
+  border-radius: 50%;
+  width: 310px;
+  height: 310px;
+  background-color: #fff;
+  border: 1px solid #333;
+  box-shadow: 0 0 5px #666;
+  text-align: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  z-index: 2;
+}
+.blindsCenter.full {
+  left: 0;
+  right: 0;
+  transform: rotateY(-180deg);
+}
+.blinds.left .blindsCenter.blank {
+  right: -155px;
+}
+.blinds.full .blindsCenter.blank {
+  right: 0;
+  left: 0;
+}
+.blinds.right .blindsCenter.blank {
+  left: -155px;
+}
+#blindsLogo {
+  position: relative;
+  top: 55px;
+  height: 200px;
+}
+#finalScore {
+  position: fixed;
+  width: 800px;
+  height: 550px;
+  top: 65px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto auto;
+  border: 2px solid #333;
+  z-index: 0;
+  opacity: 0;
+  background-color: #444;
+}
+.final-score {
+  float: left;
+  width: 50%;
+  height: 38%;
+  line-height: 200px;
+  border-bottom: 2px solid #333;
+  color: #fff;
+  font-family: "FuturaLTBold";
+  font-size: 100px;
+  text-align: center;
+  text-shadow: 0 0 3px #333;
+}
+#redFinalScore {
+  background-color: #ff4444;
+  padding-right: 150px;
+}
+#blueFinalScore {
+  clear: right;
+  background-color: #2080ff;
+  padding-left: 150px;
+}
+.final-teams {
+  float: left;
+  width: 50%;
+  height: 9%;
+  line-height: 50px;
+  text-align: center;
+  color: #fff;
+  font-family: "FuturaLT";
+  font-size: 35px;
+}
+.final-teams span {
+  margin: 0px 20px;
+}
+#redFinalTeams {
+  clear: left;
+  border-right: 2px solid #333;
+}
+#blueFinalTeam {
+}
+.final-breakdown {
+  float: left;
+  width: 33%;
+  height: 44%;
+  padding: 0px 20px;
+  display: table;
+  text-align: center;
+  background-color: #fff;
+  color: #222;
+  font-family: "FuturaLT";
+  font-size: 24px;
+}
+#redFinalBreakdown {
+  clear: left;
+  text-align: right;
+}
+#blueFinalBreakdown {
+  text-align: left;
+}
+#centerFinalBreakdown {
+  width: 34%;
+  border-left: 2px solid #333;
+  border-right: 2px solid #333;
+}
+#finalEventMatchInfo {
+  clear: both;
+  width: 100%;
+  height: 9%;
+  line-height: 50px;
+  padding: 0px 25px;
+  font-family: "FuturaLT";
+  font-size: 28px;
+  color: #fff;
+}
+[data-checked=true] {
+  color: #0c0;
+}
+[data-checked=false] {
+  color: #e00;
+}
+#sponsor {
+  position: fixed;
+  width: 1000px;
+  height: 600px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto auto;
+  border: 2px solid #333;
+  z-index: 1;
+  opacity: 0;
+  background-color: #fff;
+  text-align: center;
+}
+#sponsor .carousel-inner, #sponsor .item {
+  height: 100%;
+}
+#sponsor h1, #sponsor h2 {
+  font-family: "FuturaLTBold";
+  margin: 0;
+}
+#sponsor h1 {
+  font-size: 60px;
+  background-color: #444;
+  color: #fff;
+  padding: 0.25em;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 96px;
+}
+#sponsor h2 {
+  font-size: 6em;
+  padding-top: 150px;
+}
+#sponsor img {
+  max-width: 800px;
+  height: 400px;
+  margin-top: 50px;
+  display: inline-block;
+}
+#allianceSelectionCentering {
+  position: absolute;
+  height: 100%;
+  right: 3em;
+}
+#allianceSelection {
+  display: table-cell;
+  vertical-align: middle;
+}
+#allianceSelectionTable {
+  background-color: #fff;
+  border: 2px solid #222;
+  text-align: center;
+  font-family: "FuturaLT";
+  font-size: 3.5em;
+}
+#allianceSelectionTable img {
+  width: 4em;
+  margin: 0.3em;
+}
+#allianceSelectionTable tr:nth-child(even) {
+  background-color: #eee;
+}
+.alliance-cell {
+  padding: 0px 40px;
+  font-family: "FuturaLT";
+  color: #999;
+}
+.selection-cell {
+  width: 3.4em;
+  color: #222;
+}
+#lowerThird {
+  display: none;
+  position: absolute;
+  left: -1000px;
+  bottom: 100px;
+  background-color: #fff;
+  border: 1px solid #222;
+  color: #222;
+  font-size: 30px;
+  width: 800px;
+  height: 87px;
+}
+#lowerThirdLogo {
+  margin: 12px 20px;
+  height: 60px;
+  float: left;
+}
+#lowerThirdTop {
+  position: relative;
+  top: 10px;
+  display: none;
+  font-family: "FuturaLTBold";
+}
+#lowerThirdBottom {
+  display: none;
+  font-family: "FuturaLT";
+  font-size: 23px;
+  position: relative;
+  top: 5px;
+}
+#lowerThirdSingle {
+  display: none;
+  font-family: "FuturaLTBold";
+  line-height: 87px;
+}
+.score-icon {
+  position: relative;
+  top: -4px;
+  height: 23px;
+}
+.score-icon-right {
+  -webkit-transform: scaleX(-1);
+}

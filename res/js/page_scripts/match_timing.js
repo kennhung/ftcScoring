@@ -31,6 +31,7 @@ var translateMatchTime = function (data, callback) {
             break;
         case "TELEOP_PERIOD":
             matchStateText = "TELEOPERATED";
+            break;
         case "ENDGAME_PERIOD":
             matchStateText = "TELEOPERATED-ENDGAME";
             break;
@@ -38,5 +39,11 @@ var translateMatchTime = function (data, callback) {
             matchStateText = "POST-MATCH";
             break;
     }
-    callback(matchStates[data.MatchState], matchStateText, data.MatchTimeSec);
+    var matchTimeText;
+    if(data.MatchTimeSec%60<10){
+        matchTimeText = Math.floor(data.MatchTimeSec/60) + ":0" + data.MatchTimeSec%60
+    }else{
+        matchTimeText = Math.floor(data.MatchTimeSec/60) + ":" + data.MatchTimeSec%60
+    }
+    callback(matchStates[data.MatchState], matchStateText, matchTimeText);
 };

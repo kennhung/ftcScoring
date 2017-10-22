@@ -39,9 +39,7 @@ func Index(content string, buffer *bytes.Buffer) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
-
-
-
+    <script src="/res/js/bootstrap-number-input.js"></script>
     <!-- Scoring System Script -->
     <script src="/res/js/ftcScoring.js"></script>
 
@@ -78,6 +76,7 @@ Dashboard
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
                             <a class="dropdown-item" href="/setup/teams">Teams</a>
+                            <a class="dropdown-item" href="/setup/schedule">Generate Match</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -87,6 +86,7 @@ Dashboard
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/match/play">Play</a>
+                            <a class="dropdown-item" href="/match/scoring">Scoring</a>
                         </div>
                     </li>
                 </ul>

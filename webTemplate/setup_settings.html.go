@@ -42,9 +42,7 @@ func Setup_settings(eventSettings *model.EventSettings, buffer *bytes.Buffer) {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
             integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
             crossorigin="anonymous"></script>
-
-
-
+    <script src="/res/js/bootstrap-number-input.js"></script>
     <!-- Scoring System Script -->
     <script src="/res/js/ftcScoring.js"></script>
 
@@ -84,6 +82,7 @@ Event Setting
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
                             <a class="dropdown-item" href="/setup/teams">Teams</a>
+                            <a class="dropdown-item" href="/setup/generateMatch">Generate Match</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -93,6 +92,7 @@ Event Setting
                         </a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/match/play">Play</a>
+                            <a class="dropdown-item" href="/match/scoring">Scoring</a>
                         </div>
                     </li>
                 </ul>
@@ -113,9 +113,6 @@ Event Setting
                 Event Settings
             </div>
             <div class="card-body">
-                <div class="alert alert-warning fade" role="alert" id="wrongDate" style="display: none;">
-                    Wrong Date format
-                </div>
                 <form id="eventSetting" action="/setup/settings" method="POST" novalidate>
                     <div class="form-group">
                         <label for="name">Event Name</label>
@@ -187,10 +184,30 @@ Event Setting
                             <input name="date" id="date" type="text" class="form-control datepicker" placeholder="mm/dd/yyyy"
                                    value="`)
 	hero.EscapeHTML(timestr, buffer)
-	buffer.WriteString(`" data-toggle="popover">
+	buffer.WriteString(`"  data-toggle="popover" data-placement="left" data-content="Wrong Date format">
                             <span class="input-group-addon"  id="openPicker"><span class="oi oi-calendar" title="calendar"
                                                                   aria-hidden="true"></span></span>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="background_color">Background Color</label>
+                        <input name="background_color" type="text" class="form-control" id="background_color" placeholder="Background Color"
+                               value="`)
+	hero.EscapeHTML(eventSettings.DisplayBackgroundColor, buffer)
+	buffer.WriteString(`">
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label" for="overlay">
+                        <input name="overlay" type="checkbox" class="form-check-input" id="overlay"
+                        `)
+
+	if eventSettings.DisplayOverlayMode {
+		buffer.WriteString(`
+                            checked
+                        `)
+	}
+	buffer.WriteString(` > Video Overlay
+                        </label>
                     </div>
                     <button id="send" type="button" class="btn btn-primary">Save</button>
                 </form>
@@ -204,25 +221,26 @@ Event Setting
 
 <script>
     $(document).ready(function () {
-        $('.alert').hide()
+        $('.alert').hide();
         var $input = $('.datepicker').pickadate({
             // Escape any “rule” characters with an exclamation mark (!).
             format: 'mm/dd/yyyy',
             formatSubmit: 'mm/dd/yyyy',
             editable :true
         })
-        var picker = $input.pickadate('picker')
+        var picker = $input.pickadate('picker');
 
         $("#openPicker").click(function () {
-            picker.open(false)
+            picker.open(false);
         })
 
         $("#send").click(function () {
             if (isValidDate($("#date").val())) {
-                $("#eventSetting").submit()
+                $("#eventSetting").submit();
             }
             else {
-                $("#wrongDate").removeClass("fade").show()
+                $("#date").popover('toggle');
+                $("#date").addClass('is-invalid');
             }
         })
     })

@@ -14,7 +14,7 @@ type Score struct {
 	RelicsZ3        int
 	RelicsUpright   int
 	RobotBalanced   int
-	Penalties       []int
+	Penalties       []int// 0 for Major, 1 for Minor
 	ElimDisq        bool
 }
 
@@ -27,7 +27,7 @@ type ScoreSummary struct {
 	Tot   int
 }
 
-func (score *Score) Summarize(opponentFouls []int, matchType string) *ScoreSummary {
+func (score *Score) Summarize(opponentPenalties []int, matchType string) *ScoreSummary {
 	summary := new(ScoreSummary)
 
 	// Leave the score at zero if the team was disqualified.
@@ -47,7 +47,7 @@ func (score *Score) Summarize(opponentFouls []int, matchType string) *ScoreSumma
 	summary.EndG = 10*score.RelicsZ1+20*score.RelicsZ2+40*score.RelicsZ3+15*score.RelicsUpright+20*score.RobotBalanced
 
 	// Calculate penalty points.
-	summary.Pen += opponentFouls[0]*40+opponentFouls[1]*10
+	summary.Pen += opponentPenalties[0]*40+ opponentPenalties[1]*10
 
 	//Total Point
 	summary.Tot = summary.Auto + summary.Tele + summary.EndG + summary.Pen

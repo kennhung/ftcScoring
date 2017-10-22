@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"bytes"
 	"github.com/kennhung/ftcScoring/webTemplate"
-	log "log"
+	"log"
 	"github.com/kennhung/ftcScoring/play"
 	"fmt"
 	"io"
