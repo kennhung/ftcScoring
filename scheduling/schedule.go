@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"time"
 	"github.com/kennhung/ftcScoring/model"
+	"fmt"
 )
 
 const (
@@ -25,7 +26,7 @@ func BuildRandomSchedule(teams []model.Team, MatchesPerTeam int, Type string) ([
 	var ids [4]int
 	index := i
 
-	for _, match := range matches {
+	for num, match := range matches {
 		for j := 0; j < 4; j++ {
 			if index < numTeams {
 				ids[j] = teamShuffle[index];
@@ -42,7 +43,9 @@ func BuildRandomSchedule(teams []model.Team, MatchesPerTeam int, Type string) ([
 		match.Red2 = teams[ids[1]].Id;
 		match.Blue1 = teams[ids[2]].Id;
 		match.Blue2 = teams[ids[3]].Id;
+		match.DisplayName = fmt.Sprint(num)
 		i = i + 4
+		matches[num] = match
 	}
 
 	// Fill in the match times.

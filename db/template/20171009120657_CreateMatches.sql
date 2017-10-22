@@ -16,7 +16,6 @@ CREATE TABLE matches (
   startedat    DATETIME,
   winner       VARCHAR(16)
 );
-CREATE UNIQUE INDEX type_displayname ON matches(type, displayname);
 
 -- +goose Down
 DROP TABLE matches;
