@@ -67,7 +67,7 @@ func (database *Database) mapTables() {
 	database.rankingMap.AddTableWithName(RankingDb{}, "rankings").SetKeys(false, "TeamId")
 
 	database.teamMap = modl.NewDbMap(database.db, dialect)
-	database.teamMap.AddTableWithName(Team{}, "play").SetKeys(false, "Id")
+	database.teamMap.AddTableWithName(Team{}, "teams").SetKeys(false, "Id")
 /*
 	database.allianceTeamMap = modl.NewDbMap(database.db, dialect)
 	database.allianceTeamMap.AddTableWithName(AllianceTeam{}, "alliance_teams").SetKeys(true, "Id")
