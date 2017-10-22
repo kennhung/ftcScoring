@@ -21,6 +21,7 @@ func Setup_Teams(teams []model.Team, buffer *bytes.Buffer) {
     <!-- Bootstrap CSS -->
     <link href="/res/css/bootstrap.min.css" rel="stylesheet">
     <link href="/res/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+    <link href="/res/css/ftcScoring.css" rel="stylesheet">
     <!-- JS Scripts -->
 
     <!-- load jQuery 1.11.0 -->

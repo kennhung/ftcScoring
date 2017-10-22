@@ -22,6 +22,7 @@ func Match_Scoring(allMatchs [3][]model.Match, buffer *bytes.Buffer) {
     <!-- Bootstrap CSS -->
     <link href="/res/css/bootstrap.min.css" rel="stylesheet">
     <link href="/res/open-iconic/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+    <link href="/res/css/ftcScoring.css" rel="stylesheet">
     <!-- JS Scripts -->
 
     <!-- load jQuery 1.11.0 -->
@@ -143,21 +144,22 @@ Match Scoring
             </div>
         </div>
         <div class="card-deck" id="scoringCard">
-            <div class="card bg-light mb-3">
+            <div class="card bg-light mb-3 border-danger">
                 <div class="card-header">
                     Red Scoring
                 </div>
                 <div class="card-body">
                     <form id="redScoreForm">
+
                         <h3><span class="badge badge-secondary">Autonomous Period</span></h3>
+
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg col-sm col"><label class="col-form-label"
                                                                       for="AutoJewels">JewelsRemaining</label></div>
-                                <div class="col-lg-6 col-sm-6 col-6"><input name="RedAutoJewels" type="text"
-                                                                            class="form-control numInput"
-                                                                            id="AutoJewels"
-                                                                            placeholder="JewelsRemaining"></div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedAutoJewels" type="text" class="form-control numInput"
+                                           id="AutoJewels" placeholder="JewelsRemaining"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -165,20 +167,18 @@ Match Scoring
                                 <div class="col-lg col-sm col"><label class="col-form-label"
                                                                       for="AutoCryptobox">Glyphs in Cryptobox</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-6 col-6"><input name="RedAutoCryptobox" type="text"
-                                                                            class="form-control numInput"
-                                                                            id="AutoCryptobox"
-                                                                            placeholder="Glyphs in Cryptobox"></div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedAutoCryptobox" type="text" class="form-control numInput"
+                                           id="AutoCryptobox" placeholder="Glyphs in Cryptobox"></div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg col-sm col"><label class="col-form-label"
                                                                       for="CryptoboxKeys">Cryptobox Keys</label></div>
-                                <div class="col-lg-6 col-sm-6 col-6"><input name="RedCryptoboxKeys" type="text"
-                                                                            class="form-control numInput"
-                                                                            id="CryptoboxKeys"
-                                                                            placeholder="Cryptobox Keys"></div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedCryptoboxKeys" type="text" class="form-control numInput"
+                                           id="CryptoboxKeys" placeholder="Cryptobox Keys"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -186,18 +186,203 @@ Match Scoring
                                 <div class="col-lg col-sm col"><label class="col-form-label"
                                                                       for="RobotInSafeZone">Robots in Safe Zone</label>
                                 </div>
-                                <div class="col-lg-6 col-sm-6 col-6"><input name="RedRobotInSafeZone" type="text"
-                                                                            class="form-control numInput"
-                                                                            id="RobotInSafeZone"
-                                                                            placeholder="Robots in Safe Zone"></div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedRobotInSafeZone" type="text" class="form-control numInput"
+                                           id="RobotInSafeZone" placeholder="Robots in Safe Zone"></div>
                             </div>
                         </div>
+
+
+                        <h3><span class="badge badge-secondary">Driver-Controlled Period</span></h3>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="Glyphs">
+                                        <span class="badge badge-pill badge-dark">Glyphs</span>
+                                        Scored
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedGlyphs" type="text" class="form-control numInput" id="Glyphs"
+                                           placeholder="Scored"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="ComRows">
+                                        <span class="badge badge-pill badge-dark">Completed</span>
+                                        Rows
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedComRows" type="text" class="form-control numInput" id="ComRows"
+                                           placeholder="Rows"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="ComColumns">
+                                        <span class="badge badge-pill badge-dark">Completed</span>
+                                        Columns</label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6"><input name="RedComColumns" type="text"
+                                                                            class="form-control numInput"
+                                                                            id="ComColumns" placeholder="Columns"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="ComCiphers">
+                                        <span class="badge badge-pill badge-dark">Completed</span>
+                                        Ciphers
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedComCiphers" type="text" class="form-control numInput"
+                                           id="ComCiphers" placeholder="Ciphers"></div>
+                            </div>
+                        </div>
+
+                        <h3><span class="badge badge-secondary">End Game Period</span></h3>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="RelicsZ1">
+                                        <span class="badge badge-pill badge-dark">Relics</span>
+                                        Zone 1
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedRelicsZ1" type="text" class="form-control numInput"
+                                           id="RelicsZ1" placeholder="Zone 1"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="RelicsZ2">
+                                        <span class="badge badge-pill badge-dark">Relics</span>
+                                        Zone 2
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedRelicsZ2" type="text" class="form-control numInput"
+                                           id="RelicsZ2" placeholder="Zone 2"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="RelicsZ3">
+                                        <span class="badge badge-pill badge-dark">Relics</span>
+                                        Zone 3
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedRelicsZ3" type="text" class="form-control numInput"
+                                           id="RelicsZ3" placeholder="Zone 3"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="RelicsUpright">
+                                        <span class="badge badge-pill badge-dark">Relics</span>
+                                        Upright
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedRelicsUpright" type="text" class="form-control numInput"
+                                           id="RelicsUpright" placeholder="Upright"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="RobotBalanced">
+                                        Robots Balanced
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedRobotBalanced" type="text" class="form-control numInput"
+                                           id="RobotBalanced" placeholder="Robots Balanced"></div>
+                            </div>
+                        </div>
+
+                        <h3><span class="badge badge-secondary">Penalties</span></h3>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="MinorPena">
+                                        # Minor
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedMinorPena" type="text" class="form-control numInput"
+                                           id="MinorPena" placeholder="# Minor"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg col-sm col">
+                                    <label class="col-form-label" for="MajorPena">
+                                        # Major
+                                    </label>
+                                </div>
+                                <div class="col-lg-6 col-sm-6 col-6">
+                                    <input name="RedMajorPena" type="text" class="form-control numInput"
+                                           id="MajorPena" placeholder="# Major"></div>
+                            </div>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Teams</th>
+                                <th scope="col">No Show</th>
+                                <th scope="col">Yellow Card</th>
+                                <th scope="col">Red Card</th>
+                            </tr>
+                            </thead>
+                            <tbody class="text-center">
+                            <tr id="red1">
+                                <th scope="row" id="num">0</th>
+                                <td><label class="btn btn-dark">
+                                    <input type="checkbox" id="noShwo" autocomplete="off">
+                                </label></td>
+                                <td><label class="btn btn-warning">
+                                    <input type="checkbox" id="yellowcard" autocomplete="off">
+                                </label></td>
+                                <td><label class="btn btn-danger">
+                                    <input type="checkbox" id="redcard" autocomplete="off">
+                                </label></td>
+                            </tr>
+                            <tr id="red2">
+                                <th scope="row" id="num">0</th>
+                                <td><label class="btn btn-dark">
+                                    <input type="checkbox" id="noShwo" autocomplete="off">
+                                </label></td>
+                                <td><label class="btn btn-warning">
+                                    <input type="checkbox" id="yellowcard" autocomplete="off">
+                                </label></td>
+                                <td><label class="btn btn-danger">
+                                    <input type="checkbox" id="redcard" autocomplete="off">
+                                </label></td>
+                            </tr>
+                            </tbody>
+                        </table>
+
                     </form>
                 </div>
             </div>
 
 
-            <div class="card bg-light mb-3">
+            <div class="card bg-light mb-3 border-primary">
                 <div class="card-header">
                     Blue Scoring
                 </div>
