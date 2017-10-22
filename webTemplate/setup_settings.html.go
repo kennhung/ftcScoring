@@ -82,7 +82,7 @@ Event Setting
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
                             <a class="dropdown-item" href="/setup/teams">Teams</a>
-                            <a class="dropdown-item" href="/setup/generateMatch">Generate Match</a>
+                            <a class="dropdown-item" href="/setup/schedule">Generate Match</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -141,18 +141,18 @@ Event Setting
 		if option == eventSettings.Type {
 
 			buffer.WriteString(`
-                                <option selected="selected">
-                                    `)
+                            <option selected="selected">
+                                `)
 		} else {
 
 			buffer.WriteString(`
-                                <option>
-                                    `)
+                            <option>
+                                `)
 		}
 		hero.EscapeHTML(option, buffer)
 		buffer.WriteString(`
-                                </option>
-                                `)
+                            </option>
+                            `)
 
 	}
 
@@ -184,9 +184,9 @@ Event Setting
                             <input name="date" id="date" type="text" class="form-control datepicker" placeholder="mm/dd/yyyy"
                                    value="`)
 	hero.EscapeHTML(timestr, buffer)
-	buffer.WriteString(`"  data-toggle="popover" data-placement="left" data-content="Wrong Date format">
+	buffer.WriteString(`" data-toggle="popover" data-placement="left" data-content="Wrong Date format">
                             <span class="input-group-addon"  id="openPicker"><span class="oi oi-calendar" title="calendar"
-                                                                  aria-hidden="true"></span></span>
+                                                                                   aria-hidden="true"></span></span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -198,13 +198,12 @@ Event Setting
                     </div>
                     <div class="form-check">
                         <label class="form-check-label" for="overlay">
-                        <input name="overlay" type="checkbox" class="form-check-input" id="overlay"
-                        `)
-
+                            <input name="overlay" type="checkbox" class="form-check-input" id="overlay"
+                                   `)
 	if eventSettings.DisplayOverlayMode {
 		buffer.WriteString(`
                             checked
-                        `)
+                            `)
 	}
 	buffer.WriteString(` > Video Overlay
                         </label>

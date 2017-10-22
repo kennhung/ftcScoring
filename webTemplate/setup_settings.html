@@ -1,0 +1,143 @@
+<%: func Setup_settings(eventSettings *model.EventSettings,buffer *bytes.Buffer) %>
+
+<%~ "base.html" %>
+<%!
+import (
+"bytes"
+"github.com/kennhung/ftcScoring/model"
+"fmt"
+)
+%>
+
+<%@ scoring_scripts { %>
+<script src="/res/datePicker/picker.js"></script>
+<script src="/res/datePicker/picker.date.js"></script>
+<link href="/res/datePicker/classic.css" rel="stylesheet">
+<link href="/res/datePicker/classic.date.css" rel="stylesheet">
+<%} %>
+
+<%@ body { %>
+<div class="row">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg">
+        <div class="card bg-light mb-3">
+            <div class="card-header">
+                Event Settings
+            </div>
+            <div class="card-body">
+                <form id="eventSetting" action="/setup/settings" method="POST" novalidate>
+                    <div class="form-group">
+                        <label for="name">Event Name</label>
+                        <input name="name" type="text" class="form-control" id="name" placeholder="Enter Event Name"
+                               value="<%= eventSettings.Name %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="region">Event Region</label>
+                        <input name="region" type="text" class="form-control" id="region" placeholder="Region"
+                               value="<%= eventSettings.Region %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Event Type</label>
+                        <select  name="type" class="form-control" id="type">
+                            <%
+                            var types = []string{"Championship","Qualifer",
+                            "Meet","League Tournament","Scrimmage","Other"}
+
+                            for i:=0;i < len(types);i++{
+                            option :=types[i]
+                            if option== eventSettings.Type{
+                            %>
+                            <option selected="selected">
+                                <%}else{
+                                %>
+                            <option>
+                                <%} %>
+                                <%= option %>
+                            </option>
+                            <%
+                            }
+                            %>
+                        </select >
+                    </div>
+                    <div class="form-group">
+                        <%
+                        var timestr = ""
+                        year, monthM, day := eventSettings.Date.Date()
+                        var month int = int(monthM)
+                        if month<10 {
+                        timestr += fmt.Sprint("0",month)
+                        } else{
+                        timestr += fmt.Sprint(month)
+                        }
+                        timestr += fmt.Sprint("/")
+                        if day<10{
+                        timestr += fmt.Sprint("0",day)
+                        }else{
+                        timestr += fmt.Sprint(day)
+                        }
+                        timestr += fmt.Sprint("/",year)
+                        %>
+                        <label for="date">Date</label>
+                        <div class="input-group">
+                            <input name="date" id="date" type="text" class="form-control datepicker" placeholder="mm/dd/yyyy"
+                                   value="<%= timestr%>" data-toggle="popover" data-placement="left" data-content="Wrong Date format">
+                            <span class="input-group-addon"  id="openPicker"><span class="oi oi-calendar" title="calendar"
+                                                                                   aria-hidden="true"></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="background_color">Background Color</label>
+                        <input name="background_color" type="text" class="form-control" id="background_color" placeholder="Background Color"
+                               value="<%= eventSettings.DisplayBackgroundColor %>">
+                    </div>
+                    <div class="form-check">
+                        <label class="form-check-label" for="overlay">
+                            <input name="overlay" type="checkbox" class="form-check-input" id="overlay"
+                                   <% if eventSettings.DisplayOverlayMode { %>
+                            checked
+                            <%}%> > Video Overlay
+                        </label>
+                    </div>
+                    <button id="send" type="button" class="btn btn-primary">Save</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.alert').hide();
+        var $input = $('.datepicker').pickadate({
+            // Escape any “rule” characters with an exclamation mark (!).
+            format: 'mm/dd/yyyy',
+            formatSubmit: 'mm/dd/yyyy',
+            editable :true
+        })
+        var picker = $input.pickadate('picker');
+
+        $("#openPicker").click(function () {
+            picker.open(false);
+        })
+
+        $("#send").click(function () {
+            if (isValidDate($("#date").val())) {
+                $("#eventSetting").submit();
+            }
+            else {
+                $("#date").popover('toggle');
+                $("#date").addClass('is-invalid');
+            }
+        })
+    })
+</script>
+
+<% } %>
+
+<%@ title { %>
+Event Setting
+<% } %>

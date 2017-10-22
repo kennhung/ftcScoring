@@ -10,41 +10,39 @@ const (
 	TeamsPerMatch = 4
 )
 
-type ScheduleSettings struct {
-	MatchesPerTeam int
-	Type           string
-}
 
 // Creates a random schedule for the given parameters and returns it as a list of matches.
-func BuildRandomSchedule(teams []model.Team, schedulesettings ScheduleSettings) ([]model.Match, error) {
+func BuildRandomSchedule(teams []model.Team, MatchesPerTeam int, Type string) ([]model.Match, error) {
 	numTeams := len(teams)
-	matchesPerTeam := schedulesettings.MatchesPerTeam
+	matchesPerTeam := MatchesPerTeam
 	numMatches := matchesPerTeam * numTeams
 
 	// Generate a random permutation of the team ordering to fill into the pre-randomized schedule.
 	teamShuffle := rand.Perm(numTeams)
 	matches := make([]model.Match, numMatches)
+
+	i := 0
+	var ids [4]int
+	index := i
+
 	for _, match := range matches {
-		for i := 0; i < numTeams; i = i + 4 {
-			var ids [4]int
-			var index = i
-			for j := 0; j < 4; j++ {
-				if index < numMatches {
-					ids[j] = teamShuffle[index]
-					index++
-				} else {
-					teamShuffle = rand.Perm(numTeams)
-					i = 0
-					index = i
-					ids[j] = teamShuffle[index]
-					index++
-				}
+		for j := 0; j < 4; j++ {
+			if index < numTeams {
+				ids[j] = teamShuffle[index];
+				index++;
+			} else {
+				teamShuffle = rand.Perm(numTeams)
+				i = 0
+				index = i
+				ids[j] = teamShuffle[index]
+				index++
 			}
-			match.Red1 = teams[ids[0]].Id
-			match.Red2 = teams[ids[1]].Id
-			match.Blue1 = teams[ids[2]].Id
-			match.Blue2 = teams[ids[3]].Id
 		}
+		match.Red1 = teams[ids[0]].Id;
+		match.Red2 = teams[ids[1]].Id;
+		match.Blue1 = teams[ids[2]].Id;
+		match.Blue2 = teams[ids[3]].Id;
+		i = i + 4
 	}
 
 	// Fill in the match times.
