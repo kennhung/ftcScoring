@@ -15,9 +15,9 @@ import (
 func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
 
 	var data [3][]model.Match
-
 	var err error
 
+	currentMatch := web.arena.CurrentMatch
 	data[0], err = web.arena.Database.GetMatchesByType("practice")
 	if err != nil{
 		handleWebErr(w, err)
@@ -37,12 +37,15 @@ func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	*/
 	buffer := new(bytes.Buffer)
-	template.Match_Scoring(data, buffer)
+	template.Match_Scoring(data, currentMatch, buffer)
 
 	w.Write(buffer.Bytes())
 }
 
 func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Request) {
+
+
+
 	websocket, err := NewWebsocket(w, r)
 	if err != nil {
 		log.Printf("Websocket error: %s", err)
@@ -62,6 +65,7 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 		RedScore  *play.Score
 		BlueScore *play.Score
 	}{web.arena.RedScore,web.arena.BlueScore}
+
 	err = websocket.Write("score", data)
 	if err != nil {
 		log.Printf("Websocket error: %s", err)

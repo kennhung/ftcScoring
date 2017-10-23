@@ -14,7 +14,7 @@ type Score struct {
 	RelicsZ3        int
 	RelicsUpright   int
 	RobotBalanced   int
-	Penalties       []int// 0 for Major, 1 for Minor
+	Penalties       [2]int// 0 for Major, 1 for Minor
 	ElimDisq        bool
 }
 
@@ -27,7 +27,7 @@ type ScoreSummary struct {
 	Tot   int
 }
 
-func (score *Score) Summarize(opponentPenalties []int, matchType string) *ScoreSummary {
+func (score *Score) Summarize(opponentPenalties [2]int, matchType string) *ScoreSummary {
 	summary := new(ScoreSummary)
 
 	// Leave the score at zero if the team was disqualified.
