@@ -44,7 +44,15 @@ func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
 
 func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Request) {
 
-
+	currentMatch := web.arena.CurrentMatch
+	currentMatchResult,err := web.arena.Database.GetMatchResultForMatch(currentMatch.Id)
+	if err!=nil{
+		log.Printf("Websocket error: %s", err)
+		return
+	}else if currentMatchResult == nil{
+		//Not Saved yet
+		currentMatchResult = model.NewMatchResult()
+	}
 
 	websocket, err := NewWebsocket(w, r)
 	if err != nil {
@@ -149,4 +157,43 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 		}
 	}
 
+}
+
+func (web *Web) getCurrentMatchResult() *model.MatchResult {
+	var RedCards   map[string]string
+	var BlueCards  map[string]string
+
+	if web.arena.Teams["R1"].YellowCard&&web.arena.RedScore.Cards["R1"] == "Yellow"{
+		RedCards["R1"] = "Red"
+	}else if !web.arena.Teams["R1"].YellowCard&&web.arena.RedScore.Cards["R1"] == "Yellow"{
+		RedCards["R1"] = "Yellow"
+	} else if web.arena.RedScore.Cards["R1"] == "Red"{
+		RedCards["R1"] = "Red"
+	}
+
+	if web.arena.Teams["R2"].YellowCard&&web.arena.RedScore.Cards["R2"] == "Yellow"{
+		RedCards["R2"] = "Red"
+	}else if !web.arena.Teams["R2"].YellowCard&&web.arena.RedScore.Cards["R2"] == "Yellow"{
+		RedCards["R2"] = "Yellow"
+	} else if web.arena.RedScore.Cards["R2"] == "Red"{
+		RedCards["R2"] = "Red"
+	}
+	if web.arena.Teams["B1"].YellowCard&&web.arena.BlueScore.Cards["B1"] == "Yellow"{
+		BlueCards["B1"] = "Red"
+	}else if !web.arena.Teams["B1"].YellowCard&&web.arena.BlueScore.Cards["B1"] == "Yellow"{
+		BlueCards["B1"] = "Yellow"
+	} else if web.arena.BlueScore.Cards["B1"] == "Red"{
+		BlueCards["B1"] = "Red"
+	}
+	if web.arena.Teams["B2"].YellowCard&&web.arena.BlueScore.Cards["B2"] == "Yellow"{
+		BlueCards["B2"] = "Red"
+	}else if !web.arena.Teams["B2"].YellowCard&&web.arena.BlueScore.Cards["B2"] == "Yellow"{
+		BlueCards["B2"] = "Yellow"
+	} else if web.arena.BlueScore.Cards["B2"] == "Red"{
+		BlueCards["B2"] = "Red"
+	}
+
+	return &model.MatchResult{MatchId: web.arena.CurrentMatch.Id, MatchType: web.arena.CurrentMatch.Type,
+		RedScore: web.arena.RedScore, BlueScore: web.arena.BlueScore,
+		RedCards: RedCards, BlueCards: BlueCards}
 }

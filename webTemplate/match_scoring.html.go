@@ -119,6 +119,16 @@ Match Scoring
 			var printStr = ""
 			if currentMatch.Id == match.Id {
 				printStr += fmt.Sprint("*")
+
+				buffer.WriteString(`
+                        <option selected="selected">
+                            `)
+
+			} else {
+
+				buffer.WriteString(`<option>
+                        `)
+
 			}
 			switch match.Type {
 			case "practice":
@@ -129,9 +139,6 @@ Match Scoring
 			}
 			printStr += fmt.Sprint(match.DisplayName)
 
-			buffer.WriteString(`
-                        <option>
-                            `)
 			hero.EscapeHTML(printStr, buffer)
 			buffer.WriteString(`
                         </option>
@@ -160,8 +167,8 @@ Match Scoring
                                 <div class="col-lg col-sm col"><label class="col-form-label"
                                                                       for="AutoJewels">JewelsRemaining</label></div>
                                 <div class="col-lg-6 col-sm-6 col-6">
-                                    <input name="RedAutoJewels" type="text" class="form-control numInput"
-                                           id="AutoJewels" placeholder="JewelsRemaining"></div>
+                                    <input name="RedAutoJewels" type="text" class="form-control numInput AutoJewels"
+                                           placeholder="JewelsRemaining"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -170,8 +177,8 @@ Match Scoring
                                                                       for="AutoCryptobox">Glyphs in Cryptobox</label>
                                 </div>
                                 <div class="col-lg-6 col-sm-6 col-6">
-                                    <input name="RedAutoCryptobox" type="text" class="form-control numInput"
-                                           id="AutoCryptobox" placeholder="Glyphs in Cryptobox"></div>
+                                    <input name="RedAutoCryptobox" type="text" class="form-control numInput AutoCryptobox"
+                                           placeholder="Glyphs in Cryptobox"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -179,8 +186,8 @@ Match Scoring
                                 <div class="col-lg col-sm col"><label class="col-form-label"
                                                                       for="CryptoboxKeys">Cryptobox Keys</label></div>
                                 <div class="col-lg-6 col-sm-6 col-6">
-                                    <input name="RedCryptoboxKeys" type="text" class="form-control numInput"
-                                           id="CryptoboxKeys" placeholder="Cryptobox Keys"></div>
+                                    <input name="RedCryptoboxKeys" type="text" class="form-control numInput CryptoboxKeys"
+                                           placeholder="Cryptobox Keys"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -189,8 +196,8 @@ Match Scoring
                                                                       for="RobotInSafeZone">Robots in Safe Zone</label>
                                 </div>
                                 <div class="col-lg-6 col-sm-6 col-6">
-                                    <input name="RedRobotInSafeZone" type="text" class="form-control numInput"
-                                           id="RobotInSafeZone" placeholder="Robots in Safe Zone"></div>
+                                    <input name="RedRobotInSafeZone" type="text" class="form-control numInput RobotInSafeZone"
+                                           placeholder="Robots in Safe Zone"></div>
                             </div>
                         </div>
 

@@ -32,6 +32,12 @@ import (
                         var printStr = ""
                         if currentMatch.Id == match.Id{
                             printStr += fmt.Sprint("*")
+                        %>
+                        <option selected="selected">
+                            <%
+                        }else{
+                            %><option>
+                        <%
                         }
                         switch match.Type {
                         case "practice":
@@ -42,7 +48,7 @@ import (
                         }
                         printStr += fmt.Sprint(match.DisplayName)
                         %>
-                        <option>
+
                             <%= printStr%>
                         </option>
                         <%

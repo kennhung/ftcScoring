@@ -16,6 +16,7 @@ type Score struct {
 	RobotBalanced   int
 	Penalties       [2]int// 0 for Major, 1 for Minor
 	ElimDisq        bool
+	Cards           map[string]string
 }
 
 type ScoreSummary struct {

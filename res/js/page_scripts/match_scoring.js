@@ -5,24 +5,45 @@ function InitMaxandMin() {
     $(".numInput").attr("min", 0);
     $(".numInput").attr('value',0);
 
+    //Red
     //Autonomous Period
-    $("#AutoJewels").attr("max", 4);
-    $("#AutoCryptobox").attr("max", 48);
-    $("#CryptoboxKeys").attr("max", 2);
-    $("#RobotInSafeZone").attr("max", 2);
+    $("#redScoreForm #AutoJewels").attr("max", 4);
+    $("#redScoreForm #AutoCryptobox").attr("max", 48);
+    $("#redScoreForm #CryptoboxKeys").attr("max", 2);
+    $("#redScoreForm #RobotInSafeZone").attr("max", 2);
 
     //Driver-Controlled Period
-    $("#Glyphs").attr("max",48)
-    $("#ComRows").attr("max",8)
-    $("#ComColumns").attr("max",6)
-    $("#ComCiphers").attr("max",2)
+    $("#redScoreForm #Glyphs").attr("max",48)
+    $("#redScoreForm #ComRows").attr("max",8)
+    $("#redScoreForm #ComColumns").attr("max",6)
+    $("#redScoreForm #ComCiphers").attr("max",2)
 
     //End Game Period
-    $("#RelicsZ1").attr("max",2)
-    $("#RelicsZ2").attr("max",2)
-    $("#RelicsZ3").attr("max",2)
-    $("#RelicsUpright").attr("max",2)
-    $("#RobotBalanced").attr("max",2)
+    $("#redScoreForm #RelicsZ1").attr("max",2)
+    $("#redScoreForm #RelicsZ2").attr("max",2)
+    $("#redScoreForm #RelicsZ3").attr("max",2)
+    $("#redScoreForm #RelicsUpright").attr("max",2)
+    $("#redScoreForm #RobotBalanced").attr("max",2)
+
+    //Blue
+    //Autonomous Period
+    $("#blueScoreForm #AutoJewels").attr("max", 4);
+    $("#blueScoreForm #AutoCryptobox").attr("max", 48);
+    $("#blueScoreForm #CryptoboxKeys").attr("max", 2);
+    $("#blueScoreForm #RobotInSafeZone").attr("max", 2);
+
+    //Driver-Controlled Period
+    $("#blueScoreForm #Glyphs").attr("max",48)
+    $("#blueScoreForm #ComRows").attr("max",8)
+    $("#blueScoreForm #ComColumns").attr("max",6)
+    $("#blueScoreForm #ComCiphers").attr("max",2)
+
+    //End Game Period
+    $("#blueScoreForm #RelicsZ1").attr("max",2)
+    $("#blueScoreForm #RelicsZ2").attr("max",2)
+    $("#blueScoreForm #RelicsZ3").attr("max",2)
+    $("#blueScoreForm #RelicsUpright").attr("max",2)
+    $("#blueScoreForm #RobotBalanced").attr("max",2)
 
 }
 
@@ -49,7 +70,7 @@ var handleScore = function(data) {
     //Penalties
     $("#redScoreForm #MinorPena").val(RedScore.Penalties[1])
     $("#redScoreForm #MajorPena").val(RedScore.Penalties[0])
-    scoreCommitted = false;
+
 };
 
 // Handles a websocket message to update the match status.
