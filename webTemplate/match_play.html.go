@@ -3,9 +3,13 @@
 // DO NOT EDIT!
 package template
 
-import "bytes"
+import (
+	"bytes"
 
-func Match_Play(tempstr string, buffer *bytes.Buffer) {
+	"github.com/kennhung/ftcScoring/model"
+)
+
+func Match_Play(allMatchs [3][]model.Match, currentMatch *model.Match, buffer *bytes.Buffer) {
 	buffer.WriteString(`<!DOCTYPE html>
 <html lang="en">
 <head>

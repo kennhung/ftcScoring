@@ -23,9 +23,31 @@ type MatchTimeMessage struct {
 var currentMatchType string
 
 func (web *Web) matchPlayHandler(w http.ResponseWriter, r *http.Request) {
-	buffer := new(bytes.Buffer)
 
-	template.Match_Play("test", buffer)
+	var allMatchs [3][]model.Match
+	var err error
+
+	currentMatch := web.arena.CurrentMatch
+	allMatchs[0], err = web.arena.Database.GetMatchesByType("practice")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	allMatchs[1], err = web.arena.Database.GetMatchesByType("qualification")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	allMatchs[2], err = web.arena.Database.GetMatchesByType("elimination")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	buffer := new(bytes.Buffer)
+	template.Match_Play(allMatchs, currentMatch, buffer)
 	w.Write(buffer.Bytes())
 }
 
@@ -218,7 +240,7 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 			MatchState    int
 			CanStartMatch bool
 			IsPaused      bool
-		}{web.arena.Teams, web.arena.MatchState, web.arena.CheckCanStartMatch() == nil,web.arena.MatchPaused}
+		}{web.arena.Teams, web.arena.MatchState, web.arena.CheckCanStartMatch() == nil, web.arena.MatchPaused}
 
 		err = websocket.Write("status", arenaStatus)
 		if err != nil {

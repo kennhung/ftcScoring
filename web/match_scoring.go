@@ -19,23 +19,23 @@ func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
 
 	currentMatch := web.arena.CurrentMatch
 	data[0], err = web.arena.Database.GetMatchesByType("practice")
-	if err != nil{
+	if err != nil {
 		handleWebErr(w, err)
 		return
 	}
-	/*
-		data[1], err = web.arena.Database.GetMatchesByType("qualification")
-		if err != nil{
-			handleWebErr(w, err)
-			return
-		}
 
-		data[2], err = web.arena.Database.GetMatchesByType("elimination")
-		if err != nil{
-			handleWebErr(w, err)
-			return
-		}
-	*/
+	data[1], err = web.arena.Database.GetMatchesByType("qualification")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	data[2], err = web.arena.Database.GetMatchesByType("elimination")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
 	buffer := new(bytes.Buffer)
 	template.Match_Scoring(data, currentMatch, buffer)
 
@@ -45,11 +45,11 @@ func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
 func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Request) {
 
 	currentMatch := web.arena.CurrentMatch
-	currentMatchResult,err := web.arena.Database.GetMatchResultForMatch(currentMatch.Id)
-	if err!=nil{
+	currentMatchResult, err := web.arena.Database.GetMatchResultForMatch(currentMatch.Id)
+	if err != nil {
 		log.Printf("Websocket error: %s", err)
 		return
-	}else if currentMatchResult == nil{
+	} else if currentMatchResult == nil {
 		//Not Saved yet
 		currentMatchResult = model.NewMatchResult()
 	}
@@ -72,7 +72,7 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 	data := struct {
 		RedScore  *play.Score
 		BlueScore *play.Score
-	}{web.arena.RedScore,web.arena.BlueScore}
+	}{web.arena.RedScore, web.arena.BlueScore}
 
 	err = websocket.Write("score", data)
 	if err != nil {
@@ -144,7 +144,6 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 			continue
 		}
 
-
 		// Send out the score again after handling the command, as it most likely changed as a result.
 		data = struct {
 			RedScore  *play.Score
@@ -160,36 +159,36 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 }
 
 func (web *Web) getCurrentMatchResult() *model.MatchResult {
-	var RedCards   map[string]string
-	var BlueCards  map[string]string
+	var RedCards map[string]string
+	var BlueCards map[string]string
 
-	if web.arena.Teams["R1"].YellowCard&&web.arena.RedScore.Cards["R1"] == "Yellow"{
+	if web.arena.Teams["R1"].YellowCard && web.arena.RedScore.Cards["R1"] == "Yellow" {
 		RedCards["R1"] = "Red"
-	}else if !web.arena.Teams["R1"].YellowCard&&web.arena.RedScore.Cards["R1"] == "Yellow"{
+	} else if !web.arena.Teams["R1"].YellowCard && web.arena.RedScore.Cards["R1"] == "Yellow" {
 		RedCards["R1"] = "Yellow"
-	} else if web.arena.RedScore.Cards["R1"] == "Red"{
+	} else if web.arena.RedScore.Cards["R1"] == "Red" {
 		RedCards["R1"] = "Red"
 	}
 
-	if web.arena.Teams["R2"].YellowCard&&web.arena.RedScore.Cards["R2"] == "Yellow"{
+	if web.arena.Teams["R2"].YellowCard && web.arena.RedScore.Cards["R2"] == "Yellow" {
 		RedCards["R2"] = "Red"
-	}else if !web.arena.Teams["R2"].YellowCard&&web.arena.RedScore.Cards["R2"] == "Yellow"{
+	} else if !web.arena.Teams["R2"].YellowCard && web.arena.RedScore.Cards["R2"] == "Yellow" {
 		RedCards["R2"] = "Yellow"
-	} else if web.arena.RedScore.Cards["R2"] == "Red"{
+	} else if web.arena.RedScore.Cards["R2"] == "Red" {
 		RedCards["R2"] = "Red"
 	}
-	if web.arena.Teams["B1"].YellowCard&&web.arena.BlueScore.Cards["B1"] == "Yellow"{
+	if web.arena.Teams["B1"].YellowCard && web.arena.BlueScore.Cards["B1"] == "Yellow" {
 		BlueCards["B1"] = "Red"
-	}else if !web.arena.Teams["B1"].YellowCard&&web.arena.BlueScore.Cards["B1"] == "Yellow"{
+	} else if !web.arena.Teams["B1"].YellowCard && web.arena.BlueScore.Cards["B1"] == "Yellow" {
 		BlueCards["B1"] = "Yellow"
-	} else if web.arena.BlueScore.Cards["B1"] == "Red"{
+	} else if web.arena.BlueScore.Cards["B1"] == "Red" {
 		BlueCards["B1"] = "Red"
 	}
-	if web.arena.Teams["B2"].YellowCard&&web.arena.BlueScore.Cards["B2"] == "Yellow"{
+	if web.arena.Teams["B2"].YellowCard && web.arena.BlueScore.Cards["B2"] == "Yellow" {
 		BlueCards["B2"] = "Red"
-	}else if !web.arena.Teams["B2"].YellowCard&&web.arena.BlueScore.Cards["B2"] == "Yellow"{
+	} else if !web.arena.Teams["B2"].YellowCard && web.arena.BlueScore.Cards["B2"] == "Yellow" {
 		BlueCards["B2"] = "Yellow"
-	} else if web.arena.BlueScore.Cards["B2"] == "Red"{
+	} else if web.arena.BlueScore.Cards["B2"] == "Red" {
 		BlueCards["B2"] = "Red"
 	}
 
