@@ -1,13 +1,13 @@
 package web
 
 import (
-	"github.com/Team254/cheesy-arena/game"
 	"io"
 	"log"
 	"net/http"
 	"github.com/kennhung/ftcScoring/model"
 	"bytes"
 	"github.com/kennhung/ftcScoring/webTemplate"
+	"github.com/kennhung/ftcScoring/play"
 )
 
 // Renders the audience display to be chroma keyed over the video feed.
@@ -48,7 +48,7 @@ func (web *Web) audienceDisplayWebsocketHandler(w http.ResponseWriter, r *http.R
 
 	// Send the various notifications immediately upon connection.
 	var data interface{}
-	err = websocket.Write("matchTiming", game.MatchTiming)
+	err = websocket.Write("matchTiming", play.MatchTiming)
 	if err != nil {
 		log.Printf("Websocket error: %s", err)
 		return
