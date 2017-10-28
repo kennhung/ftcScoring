@@ -375,6 +375,11 @@ func (arena *Arena) Update() {
 
 	}
 
+	if arena.PrevMatchState != arena.MatchState {
+		arena.MatchStateChannel.Notify(nil)
+		arena.PrevMatchState = arena.MatchState
+	}
+
 	if int(matchTimeSec) != int(arena.PrevMatchTimeSec) {
 		if arena.MatchState == PickupPeriod {
 			arena.MatchTimeChannel.Notify(int(arena.MatchRemainTime.PickupRemainTime))

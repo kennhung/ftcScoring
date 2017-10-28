@@ -5,11 +5,13 @@ package template
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/kennhung/ftcScoring/model"
+	"github.com/shiyanhui/hero"
 )
 
-func Match_Play(allMatchs [3][]model.Match, currentMatch *model.Match, buffer *bytes.Buffer) {
+func Match_Play(allMatchs [3][]model.Match, currentMatch *model.Match, paused bool, buffer *bytes.Buffer) {
 	buffer.WriteString(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,15 +33,9 @@ func Match_Play(allMatchs [3][]model.Match, currentMatch *model.Match, buffer *b
         $jQuery_1_11_0 = $.noConflict(true);
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
-            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
-            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
-            crossorigin="anonymous"></script>
+    <script src="/res/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="/res/js/popper.min.js"></script>
+    <script src="/res/js/bootstrap.min.js"></script>
     <script src="/res/js/bootstrap-number-input.js"></script>
     <!-- Scoring System Script -->
     <script src="/res/js/ftcScoring.js"></script>
@@ -99,35 +95,105 @@ Match Play
 
 <div class="container-fluid">
     `)
+
+	var matchstr = ""
+	switch currentMatch.Type {
+	case "practice":
+		matchstr += fmt.Sprint("P-")
+	case "qualification":
+		matchstr += fmt.Sprint("Q-")
+	case "elimination":
+		matchstr += fmt.Sprint("E-")
+	case "empty":
+		matchstr += fmt.Sprint("Test Match")
+	}
+
+	matchstr += fmt.Sprint(currentMatch.DisplayName)
+
 	buffer.WriteString(`
+
 <div class="row">
-    <div class="col-lg-2">
+    <div class="col-lg-1">
+
     </div>
-    <div class="col-lg">
-        <div class="card bg-light mb-3">
+    <div class="col-lg-3">
+        <div class="card bg-light mb-3 border-primary">
             <div class="card-header">
-                Match Status
+                <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" role="tab" data-toggle="tab" href="#practice">Practice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" role="tab" data-toggle="tab" href="#qual">Qualification</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" role="tab" data-toggle="tab" href="#playoff">Playoff</a>
+                    </li>
+                </ul>
             </div>
             <div class="card-body">
-                matchState: <span id="matchState"></span>
-                matchTime: <span id="matchTime"></span>
-
-                <button class="btn btn-outline-primary" id="startMatch" onclick="startMatch();">Start Match</button>
-                <button class="btn btn-outline-warning" id="togglePause" onclick="togglePause();">Pause Match</button>
-                <button class="btn btn-outline-danger" id="abortMatch" onclick="abortMatch();">AbortMatch</button>
-                <button class="btn btn-outline-warning" id="discardResults" onclick="discardResults();">Discard Results</button>
-                <button class="btn btn-outline-info" id="commitResults" onclick="commitResults();">Commit Results</button>
+                <div class="tab-content">
+                    <div id="practice" class="tab-pane fade show active" role="tabpanel">
+                        <h3>Practice</h3>
+                        <p>Some content.</p>
+                    </div>
+                    <div id="qual" class="tab-pane fade" role="tabpanel">
+                        <h3>Qualification</h3>
+                        <p>Some content in menu 1.</p>
+                    </div>
+                    <div id="playoff" class="tab-pane fade" role="tabpanel">
+                        <h3>Playoff</h3>
+                        <p>Some content in menu 2.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg">
+        <div class="card-deck">
+            <div class="card bg-light mb-3 text-center">
+                <div class="card-header">
+                    Match Status - `)
+	hero.EscapeHTML(matchstr, buffer)
+	buffer.WriteString(`
+                </div>
+                <div class="card-body">
+                    <div class="progress" style="height: 30px;">
+                        <span id="matchTime"
+                              style="position:absolute; right:0; left:0; color: #fff; margin: 0; top: 50%; left: 50%;transform: translate(-50%, -50%);"></span>
+                        <div class="progress-bar" id="timerBar" role="progressbar" role="progressbar"></div>
+                    </div>
+                    matchState: <span id="matchState"></span>
+                </div>
+            </div>
+            <div class="card bg-light mb-3 text-center">
+                <div class="card-header">
+                    Match Control
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-outline-primary mb-1" id="startMatch" onclick="startMatch();">Start Match
+                    </button>
+                    <button class="btn btn-outline-warning mb-1" id="togglePause" onclick="togglePause();">Pause Match
+                    </button>
+                    <button class="btn btn-outline-danger mb-1" id="abortMatch" onclick="abortMatch();">AbortMatch
+                    </button>
+                    <button class="btn btn-outline-warning mb-1" id="discardResults" onclick="discardResults();">Discard
+                        Results
+                    </button>
+                    <button class="btn btn-outline-info mb-1" id="commitResults" onclick="commitResults();">Commit
+                        Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-1">
+
     </div>
 </div>
 
 <script>
-    $(function () {
 
-    })
 </script>
 
 `)

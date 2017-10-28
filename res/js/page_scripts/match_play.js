@@ -125,9 +125,18 @@ var handleStatus = function (data) {
 
 // Handles a websocket message to update the match time countdown.
 var handleMatchTime = function (data) {
-    translateMatchTime(data, function (matchState, matchStateText, countdownSec) {
+    translateMatchTime(data, function (matchState, matchStateText, countdownSec,barWidth,barClass) {
         $("#matchState").text(matchStateText);
         $("#matchTime").text(countdownSec);
+        if(data.MatchState == 3){
+
+        }else if(data.MatchState == 6){
+            $("#timerBar").attr("style","width:100%; height: 30px;");
+        }else{
+            $("#timerBar").attr("style",barWidth);
+        }
+
+        $("#timerBar").attr("class",barClass);
     });
 };
 

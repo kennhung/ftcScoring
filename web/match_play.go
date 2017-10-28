@@ -47,7 +47,7 @@ func (web *Web) matchPlayHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	buffer := new(bytes.Buffer)
-	template.Match_Play(allMatchs, currentMatch, buffer)
+	template.Match_Play(allMatchs, currentMatch, web.arena.MatchPaused, buffer)
 	w.Write(buffer.Bytes())
 }
 
@@ -61,12 +61,16 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 
 	defer websocket.Close()
 
+	MatchLoadTeamsListener := web.arena.MatchLoadTeamsChannel.Listen()
+	defer close(MatchLoadTeamsListener)
 	matchTimeListener := web.arena.MatchTimeChannel.Listen()
 	defer close(matchTimeListener)
 	audienceDisplayListener := web.arena.AudienceDisplayChannel.Listen()
 	defer close(audienceDisplayListener)
 	scoringStatusListener := web.arena.ScoringStatusChannel.Listen()
 	defer close(scoringStatusListener)
+	MatchStateListener := web.arena.MatchStateChannel.Listen()
+	defer close(MatchStateListener)
 
 	var data interface{}
 
@@ -74,7 +78,8 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 		MatchState    int
 		Teams         map[string]*model.Team
 		CanStartMatch bool
-	}{web.arena.MatchState, web.arena.Teams, web.arena.CheckCanStartMatch() == nil}
+		IsPaused      bool
+	}{web.arena.MatchState, web.arena.Teams, web.arena.CheckCanStartMatch() == nil, web.arena.MatchPaused}
 	err = websocket.Write("status", MatchStatus)
 	if err != nil {
 		log.Printf("Websocket error: %s", err)
@@ -85,6 +90,8 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 		log.Printf("Websocket error: %s", err)
 		return
 	}
+
+	//TODO fix reload
 	data = MatchTimeMessage{web.arena.MatchState, int(web.arena.MatchTimeSec())}
 	err = websocket.Write("matchTime", data)
 	if err != nil {
@@ -109,6 +116,18 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 				}
 				messageType = "matchTime"
 				message = MatchTimeMessage{web.arena.MatchState, matchTimeSec.(int)}
+			case _, ok := <-MatchStateListener:
+				if !ok {
+					return
+				}
+				messageType = "status"
+				var arenaStatus = struct {
+					Teams         map[string]*model.Team
+					MatchState    int
+					CanStartMatch bool
+					IsPaused      bool
+				}{web.arena.Teams, web.arena.MatchState, web.arena.CheckCanStartMatch() == nil, web.arena.MatchPaused}
+				message = arenaStatus
 			}
 
 			err = websocket.Write(messageType, message)
