@@ -121,29 +121,32 @@ Match Play
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" role="tab" data-toggle="tab" href="#practice">Practice</a>
+                        <a class="nav-link" id="practiceNav" role="tab" data-toggle="tab" href="#practice">Practice</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" role="tab" data-toggle="tab" href="#qual">Qualification</a>
+                        <a class="nav-link" id="qualificationNav" role="tab" data-toggle="tab" href="#qualification">Qualification</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" role="tab" data-toggle="tab" href="#playoff">Playoff</a>
+                        <a class="nav-link" id="eliminationNav" role="tab" data-toggle="tab" href="#elimination">Playoff</a>
                     </li>
                 </ul>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="overflow-y: scroll; max-height: 350px;">
                 <div class="tab-content">
-                    <div id="practice" class="tab-pane fade show active" role="tabpanel">
-                        <h3>Practice</h3>
-                        <p>Some content.</p>
+                    <div id="practice" class="tab-pane fade" role="tabpanel">
+                        `)
+	Match_Play_ListTeams(allMatchs[0], currentMatch, buffer)
+	buffer.WriteString(`
                     </div>
-                    <div id="qual" class="tab-pane fade" role="tabpanel">
-                        <h3>Qualification</h3>
-                        <p>Some content in menu 1.</p>
+                    <div id="qualification" class="tab-pane fade" role="tabpanel">
+                        `)
+	Match_Play_ListTeams(allMatchs[1], currentMatch, buffer)
+	buffer.WriteString(`
                     </div>
-                    <div id="playoff" class="tab-pane fade" role="tabpanel">
-                        <h3>Playoff</h3>
-                        <p>Some content in menu 2.</p>
+                    <div id="elimination" class="tab-pane fade" role="tabpanel">
+                        `)
+	Match_Play_ListTeams(allMatchs[2], currentMatch, buffer)
+	buffer.WriteString(`
                     </div>
                 </div>
             </div>
@@ -160,7 +163,7 @@ Match Play
                 <div class="card-body">
                     <div class="progress" style="height: 30px;">
                         <span id="matchTime"
-                              style="position:absolute; right:0; left:0; color: #fff; margin: 0; top: 50%; left: 50%;transform: translate(-50%, -50%);"></span>
+                              style="position:absolute; right:0; left:0; color: #fff; margin: 0; top: 50%; left: 50%;transform: translate(-50%, -50%);"><span class="badge badge-dark" style="font-size: 100%;"></span></span>
                         <div class="progress-bar" id="timerBar" role="progressbar" role="progressbar"></div>
                     </div>
                     matchState: <span id="matchState"></span>
@@ -193,6 +196,18 @@ Match Play
 </div>
 
 <script>
+    var currentMatchType = "`)
+	hero.EscapeHTML(currentMatch.Type, buffer)
+	buffer.WriteString(`"
+
+    if(currentMatchType == "empty"){
+        $("#practice").addClass("show active");
+        $("#practiceNav").addClass("active");
+    }
+    else{
+        $("#"+currentMatchType).addClass("show active");
+        $("#"+currentMatchType+"Nav").addClass("active");
+    }
 
 </script>
 

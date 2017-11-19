@@ -91,7 +91,6 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	//TODO fix reload
 	data = MatchTimeMessage{web.arena.MatchState, int(web.arena.MatchTimeSec())}
 	err = websocket.Write("matchTime", data)
 	if err != nil {

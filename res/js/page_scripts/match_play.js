@@ -127,13 +127,30 @@ var handleStatus = function (data) {
 var handleMatchTime = function (data) {
     translateMatchTime(data, function (matchState, matchStateText, countdownSec,barWidth,barClass) {
         $("#matchState").text(matchStateText);
-        $("#matchTime").text(countdownSec);
-        if(data.MatchState == 3){
+        $("#matchTime span").text(countdownSec);
 
-        }else if(data.MatchState == 6){
-            $("#timerBar").attr("style","width:100%; height: 30px;");
-        }else{
-            $("#timerBar").attr("style",barWidth);
+        switch(data.MatchState){
+            case 0://Pre
+                $(".btn-load").removeClass("disabled");
+                $("#timerBar").attr("style",barWidth);
+                break;
+            case 1:
+            case 2:
+                $(".btn-load").addClass("disabled");
+                $("#timerBar").attr("style",barWidth);
+                break;
+            case 3://Pause
+                $(".btn-load").addClass("disabled");
+                break;
+            case 4:
+            case 5:
+                $(".btn-load").addClass("disabled");
+                $("#timerBar").attr("style",barWidth);
+                break;
+            case 6://POST
+                $("#timerBar").attr("style","width:100%; height: 30px;");
+                $(".btn-load").addClass("disabled");
+                break;
         }
 
         $("#timerBar").attr("class",barClass);

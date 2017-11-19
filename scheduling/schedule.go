@@ -5,6 +5,7 @@ import (
 	"time"
 	"github.com/kennhung/ftcScoring/model"
 	"fmt"
+	"math"
 )
 
 const (
@@ -16,7 +17,8 @@ const (
 func BuildRandomSchedule(teams []model.Team, MatchesPerTeam int, Type string) ([]model.Match, error) {
 	numTeams := len(teams)
 	matchesPerTeam := MatchesPerTeam
-	numMatches := matchesPerTeam * numTeams
+	numMatches := int(math.Ceil(float64(matchesPerTeam * numTeams)/4.0))
+	fmt.Print(math.Ceil(float64(matchesPerTeam * numTeams)/4.0))
 
 	// Generate a random permutation of the team ordering to fill into the pre-randomized schedule.
 	teamShuffle := rand.Perm(numTeams)

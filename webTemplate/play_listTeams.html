@@ -1,0 +1,75 @@
+<%: func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, buffer *bytes.Buffer) %>
+
+<%!
+import (
+"fmt"
+"github.com/kennhung/ftcScoring/model"
+)
+%>
+
+<table class="table table-sm table-hover">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Time</th>
+        <th scope="col">Red</th>
+        <th scope="col">Blue</th>
+        <th scope="col">Load</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+    for _, match := range matchs {
+
+    var matchName = ""
+
+    switch match.Type {
+    case "practice":
+    matchName += fmt.Sprint("P-")
+    case "qualification":
+    matchName += fmt.Sprint("Q-")
+    //TODO Playoff
+    }
+    matchName += fmt.Sprint(match.DisplayName)
+
+    var Red = ""
+    var Blue = ""
+    var time = ""
+
+    time += fmt.Sprint(match.Time.Hour())
+    time += fmt.Sprint(":")
+    time += fmt.Sprint(match.Time.Minute())
+
+    Red += fmt.Sprint(match.Red1)
+    if match.Red1 < 10 {
+    Red += fmt.Sprint(" ")
+    }
+    Red += fmt.Sprint(" ")
+    Red += fmt.Sprint(match.Red2)
+    if match.Red2 < 10 {
+    Red += fmt.Sprint(" ")
+    }
+
+    Blue += fmt.Sprint(match.Blue1)
+    Blue += fmt.Sprint(" ")
+    Blue += fmt.Sprint(match.Blue2)
+    var matchID = fmt.Sprint(match.Id)
+    var classStr = ""
+
+    if match.Id == currentMatch.Id {
+    classStr += fmt.Sprint("table-warning")
+    }
+
+    %>
+    <tr class="<%= classStr %>">
+        <th scope="row"><%= matchName %></th>
+        <td><%= time %></td>
+        <td><%= Red %></td>
+        <td><%= Blue %></td>
+        <td><a class="btn btn-primary btn-sm btn-load" id="<%= matchID%>" href="/match/play/<%= matchID%>/load">Load</a></td>
+    </tr>
+    <%
+    }
+    %>
+    </tbody>
+</table>
