@@ -3,9 +3,13 @@
 // DO NOT EDIT!
 package template
 
-import "bytes"
+import (
+	"bytes"
 
-func Setup_Schedule(buffer *bytes.Buffer) {
+	"github.com/kennhung/ftcScoring/model"
+)
+
+func Setup_Schedule(allMatchs [3][]model.Match, currentMatch *model.Match, buffer *bytes.Buffer) {
 	buffer.WriteString(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +44,7 @@ func Setup_Schedule(buffer *bytes.Buffer) {
 
     <title>`)
 	buffer.WriteString(`
-Schedule
+Matches
 `)
 
 	buffer.WriteString(`- FTC Scoring</title>
@@ -64,7 +68,7 @@ Schedule
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
                             <a class="dropdown-item" href="/setup/teams">Teams</a>
-                            <a class="dropdown-item" href="/setup/schedule">Generate Match</a>
+                            <a class="dropdown-item" href="/setup/schedule">Matches</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -90,11 +94,50 @@ Schedule
     <div class="col-lg-2">
     </div>
     <div class="col-lg">
-
+        <div class="card bg-light mb-3 border-dark">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" id="practiceNav" role="tab" data-toggle="tab" href="#practice">Practice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="qualificationNav" role="tab" data-toggle="tab" href="#qualification">Qualification</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="eliminationNav" role="tab" data-toggle="tab"
+                           href="#elimination">Playoff</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div id="practice" class="tab-pane fade" role="tabpanel">
+                        `)
+	Match_Play_ListTeams(allMatchs[0], currentMatch, 1, buffer)
+	buffer.WriteString(`
+                    </div>
+                    <div id="qualification" class="tab-pane fade" role="tabpanel">
+                        `)
+	Match_Play_ListTeams(allMatchs[1], currentMatch, 1, buffer)
+	buffer.WriteString(`
+                    </div>
+                    <div id="elimination" class="tab-pane fade" role="tabpanel">
+                        `)
+	Match_Play_ListTeams(allMatchs[2], currentMatch, 1, buffer)
+	buffer.WriteString(`
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-2">
     </div>
 </div>
+
+<script>
+    $("#practice").addClass("show active");
+    $("#practiceNav").addClass("active");
+</script>
 
 `)
 

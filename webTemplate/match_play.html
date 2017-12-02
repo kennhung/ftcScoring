@@ -53,13 +53,13 @@ matchstr += fmt.Sprint(currentMatch.DisplayName)
             <div class="card-body" style="overflow-y: scroll; max-height: 350px;">
                 <div class="tab-content">
                     <div id="practice" class="tab-pane fade" role="tabpanel">
-                        <% Match_Play_ListTeams(allMatchs[0],currentMatch,buffer) %>
+                        <% Match_Play_ListTeams(allMatchs[0],currentMatch,0,buffer) %>
                     </div>
                     <div id="qualification" class="tab-pane fade" role="tabpanel">
-                        <% Match_Play_ListTeams(allMatchs[1],currentMatch,buffer) %>
+                        <% Match_Play_ListTeams(allMatchs[1],currentMatch,0,buffer) %>
                     </div>
                     <div id="elimination" class="tab-pane fade" role="tabpanel">
-                        <% Match_Play_ListTeams(allMatchs[2],currentMatch,buffer) %>
+                        <% Match_Play_ListTeams(allMatchs[2],currentMatch,0,buffer) %>
                     </div>
                 </div>
             </div>

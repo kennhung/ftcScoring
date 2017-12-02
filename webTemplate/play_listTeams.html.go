@@ -11,7 +11,7 @@ import (
 	"github.com/shiyanhui/hero"
 )
 
-func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, buffer *bytes.Buffer) {
+func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, mode int, buffer *bytes.Buffer) {
 	buffer.WriteString(`
 
 <table class="table table-sm table-hover">
@@ -21,7 +21,16 @@ func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, buffe
         <th scope="col">Time</th>
         <th scope="col">Red</th>
         <th scope="col">Blue</th>
+        `)
+
+	if mode == 0 {
+
+		buffer.WriteString(`
         <th scope="col">Load</th>
+
+        `)
+	}
+	buffer.WriteString(`
     </tr>
     </thead>
     <tbody>
@@ -46,7 +55,12 @@ func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, buffe
 
 		time += fmt.Sprint(match.Time.Hour())
 		time += fmt.Sprint(":")
-		time += fmt.Sprint(match.Time.Minute())
+		if match.Time.Minute() < 10 {
+			time += fmt.Sprint("0")
+			time += fmt.Sprint(match.Time.Minute())
+		} else {
+			time += fmt.Sprint(match.Time.Minute())
+		}
 
 		Red += fmt.Sprint(match.Red1)
 		if match.Red1 < 10 {
@@ -84,11 +98,19 @@ func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, buffe
         <td>`)
 		hero.EscapeHTML(Blue, buffer)
 		buffer.WriteString(`</td>
+        `)
+
+		if mode == 0 {
+
+			buffer.WriteString(`
         <td><a class="btn btn-primary btn-sm btn-load" id="`)
-		hero.EscapeHTML(matchID, buffer)
-		buffer.WriteString(`" href="/match/play/`)
-		hero.EscapeHTML(matchID, buffer)
-		buffer.WriteString(`/load">Load</a></td>
+			hero.EscapeHTML(matchID, buffer)
+			buffer.WriteString(`" href="/match/play/`)
+			hero.EscapeHTML(matchID, buffer)
+			buffer.WriteString(`/load">Load</a></td>
+        `)
+		}
+		buffer.WriteString(`
     </tr>
     `)
 

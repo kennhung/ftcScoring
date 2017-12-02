@@ -1,4 +1,4 @@
-<%: func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, buffer *bytes.Buffer) %>
+<%: func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, mode int, buffer *bytes.Buffer) %>
 
 <%!
 import (
@@ -14,7 +14,12 @@ import (
         <th scope="col">Time</th>
         <th scope="col">Red</th>
         <th scope="col">Blue</th>
+        <%
+        if mode == 0{
+        %>
         <th scope="col">Load</th>
+
+        <%}%>
     </tr>
     </thead>
     <tbody>
@@ -38,7 +43,12 @@ import (
 
     time += fmt.Sprint(match.Time.Hour())
     time += fmt.Sprint(":")
+    if match.Time.Minute()<10 {
+    time += fmt.Sprint("0")
     time += fmt.Sprint(match.Time.Minute())
+    }else{
+        time += fmt.Sprint(match.Time.Minute())
+    }
 
     Red += fmt.Sprint(match.Red1)
     if match.Red1 < 10 {
@@ -66,7 +76,11 @@ import (
         <td><%= time %></td>
         <td><%= Red %></td>
         <td><%= Blue %></td>
+        <%
+        if mode == 0{
+        %>
         <td><a class="btn btn-primary btn-sm btn-load" id="<%= matchID%>" href="/match/play/<%= matchID%>/load">Load</a></td>
+        <% } %>
     </tr>
     <%
     }

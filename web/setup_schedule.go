@@ -5,11 +5,35 @@ import (
 	"bytes"
 	"github.com/kennhung/ftcScoring/webTemplate"
 	"github.com/kennhung/ftcScoring/scheduling"
+	"github.com/kennhung/ftcScoring/model"
 )
 
 func (web *Web) setupscheduleGETHandler(w http.ResponseWriter, r *http.Request) {
+
+	var currentMatch = new(model.Match)
+	var allMatchs [3][]model.Match
+	var err error
+
+	allMatchs[0], err = web.arena.Database.GetMatchesByType("practice")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	allMatchs[1], err = web.arena.Database.GetMatchesByType("qualification")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
+	allMatchs[2], err = web.arena.Database.GetMatchesByType("elimination")
+	if err != nil {
+		handleWebErr(w, err)
+		return
+	}
+
 	buffer := new(bytes.Buffer)
-	template.Setup_Schedule(buffer)
+	template.Setup_Schedule(allMatchs,currentMatch,buffer)
 	w.Write(buffer.Bytes())
 }
 

@@ -74,7 +74,7 @@ Match Play
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
                             <a class="dropdown-item" href="/setup/teams">Teams</a>
-                            <a class="dropdown-item" href="/setup/schedule">Generate Match</a>
+                            <a class="dropdown-item" href="/setup/schedule">Matches</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -135,17 +135,17 @@ Match Play
                 <div class="tab-content">
                     <div id="practice" class="tab-pane fade" role="tabpanel">
                         `)
-	Match_Play_ListTeams(allMatchs[0], currentMatch, buffer)
+	Match_Play_ListTeams(allMatchs[0], currentMatch, 0, buffer)
 	buffer.WriteString(`
                     </div>
                     <div id="qualification" class="tab-pane fade" role="tabpanel">
                         `)
-	Match_Play_ListTeams(allMatchs[1], currentMatch, buffer)
+	Match_Play_ListTeams(allMatchs[1], currentMatch, 0, buffer)
 	buffer.WriteString(`
                     </div>
                     <div id="elimination" class="tab-pane fade" role="tabpanel">
                         `)
-	Match_Play_ListTeams(allMatchs[2], currentMatch, buffer)
+	Match_Play_ListTeams(allMatchs[2], currentMatch, 0, buffer)
 	buffer.WriteString(`
                     </div>
                 </div>

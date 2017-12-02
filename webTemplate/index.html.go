@@ -71,7 +71,7 @@ Dashboard
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="/setup/settings">Event Settings</a>
                             <a class="dropdown-item" href="/setup/teams">Teams</a>
-                            <a class="dropdown-item" href="/setup/schedule">Generate Match</a>
+                            <a class="dropdown-item" href="/setup/schedule">Matches</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">

@@ -1,4 +1,4 @@
-<%: func Setup_Schedule(buffer *bytes.Buffer) %>
+<%: func Setup_Schedule(allMatchs [3][]model.Match,currentMatch *model.Match, buffer *bytes.Buffer) %>
 
 <%~ "base.html" %>
 
@@ -11,14 +11,47 @@
     <div class="col-lg-2">
     </div>
     <div class="col-lg">
-
+        <div class="card bg-light mb-3 border-dark">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link" id="practiceNav" role="tab" data-toggle="tab" href="#practice">Practice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="qualificationNav" role="tab" data-toggle="tab" href="#qualification">Qualification</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="eliminationNav" role="tab" data-toggle="tab"
+                           href="#elimination">Playoff</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+                    <div id="practice" class="tab-pane fade" role="tabpanel">
+                        <% Match_Play_ListTeams(allMatchs[0],currentMatch,1,buffer) %>
+                    </div>
+                    <div id="qualification" class="tab-pane fade" role="tabpanel">
+                        <% Match_Play_ListTeams(allMatchs[1],currentMatch,1,buffer) %>
+                    </div>
+                    <div id="elimination" class="tab-pane fade" role="tabpanel">
+                        <% Match_Play_ListTeams(allMatchs[2],currentMatch,1,buffer) %>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-2">
     </div>
 </div>
 
+<script>
+    $("#practice").addClass("show active");
+    $("#practiceNav").addClass("active");
+</script>
+
 <% } %>
 
 <%@ title { %>
-Schedule
+Matches
 <% } %>
