@@ -57,6 +57,9 @@ func (fields *RankingFields) AddScoreSummary(ownScore *ScoreSummary, opponentSco
 
 	// Store a random value to be used as the last tiebreaker if necessary.
 	fields.Random = rand.Float64()
+
+	fields.Highest = 0
+	//TODO add highest
 }
 
 // Get length of Rankings
@@ -64,7 +67,25 @@ func (rankings Rankings) Len() int {
 	return len(rankings)
 }
 
-// Exchange two Ranking
-func (rankings Rankings) Exchange(i, j int) {
+// Helper function to implement the required interface for Sort.
+func (rankings Rankings) Less(i, j int) bool {
+	a := rankings[i]
+	b := rankings[j]
+
+	// Use cross-multiplication to keep it in integer math.
+	if a.QP*b.Played == b.QP*a.Played {
+		if a.RP*b.Played == b.RP*a.Played {
+			if a.Highest*b.Played == b.Highest*a.Played {
+				return a.Random > b.Random
+			}
+			return a.Highest*b.Played > b.Highest*a.Played
+		}
+		return a.RP*b.Played > b.RP*a.Played
+	}
+	return a.QP*b.Played > b.QP*a.Played
+}
+
+// Helper function to implement the required interface for Sort.
+func (rankings Rankings) Swap(i, j int) {
 	rankings[i], rankings[j] = rankings[j], rankings[i]
 }

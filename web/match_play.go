@@ -12,6 +12,7 @@ import (
 	"github.com/kennhung/ftcScoring/model"
 	"github.com/gorilla/mux"
 	"strconv"
+	"github.com/kennhung/ftcScoring/tournament"
 )
 
 type MatchTimeMessage struct {
@@ -200,7 +201,13 @@ func (web *Web) matchPlayWebsocketHandler(w http.ResponseWriter, r *http.Request
 				continue
 			}
 		case "commitResults":
-			//err = web.commitCurrentMatchScore()
+			// Temp fix
+			web.arena.CurrentMatch.Blue1notshow = false;
+			web.arena.CurrentMatch.Blue2notshow = false;
+			web.arena.CurrentMatch.Red1notshow = false;
+			web.arena.CurrentMatch.Red2notshow = false;
+
+			err = web.commitCurrentMatchScore()
 			if err != nil {
 				websocket.WriteError(err.Error())
 				continue
@@ -296,4 +303,85 @@ func (web *Web) matchPlayLoadHandler(w http.ResponseWriter, r *http.Request) {
 	currentMatchType = web.arena.CurrentMatch.Type
 
 	http.Redirect(w, r, "/match/play", 303)
+}
+
+// Saves the realtime result as the final score for the match currently loaded into the arena.
+func (web *Web) commitCurrentMatchScore() error {
+	return web.commitMatchScore(web.arena.CurrentMatch, web.getCurrentMatchResult(), true)
+}
+
+// Saves the given match and result to the database, supplanting any previous result for the match.
+func (web *Web) commitMatchScore(match *model.Match, matchResult *model.MatchResult, loadToShowBuffer bool) error {
+	if match.Type == "elimination" {
+		// Adjust the score if necessary for an elimination DQ.
+		matchResult.CorrectEliminationScore()
+	}
+
+	if loadToShowBuffer {
+		// Store the result in the buffer to be shown in the audience display.
+		web.arena.SavedMatch = match
+		web.arena.SavedMatchResult = matchResult
+		web.arena.ScorePostedChannel.Notify(nil)
+	}
+
+	if match.Type == "test" {
+		// Do nothing since this is a test match and doesn't exist in the database.
+		return nil
+	}
+
+	if matchResult.PlayNumber == 0 {
+		// Determine the play number for this new match result.
+		prevMatchResult, err := web.arena.Database.GetMatchResultForMatch(match.Id)
+		if err != nil {
+			return err
+		}
+		if prevMatchResult != nil {
+			matchResult.PlayNumber = prevMatchResult.PlayNumber + 1
+		} else {
+			matchResult.PlayNumber = 1
+		}
+
+		// Save the match result record to the database.
+		err = web.arena.Database.CreateMatchResult(matchResult)
+		if err != nil {
+			return err
+		}
+	} else {
+		// We are updating a match result record that already exists.
+		err := web.arena.Database.SaveMatchResult(matchResult)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Update and save the match record to the database.
+	match.Status = "complete"
+	redScore := matchResult.RedScoreSummary()
+	blueScore := matchResult.BlueScoreSummary()
+	if redScore.Tot > blueScore.Tot {
+		match.Winner = "R"
+	} else if redScore.Tot < blueScore.Tot {
+		match.Winner = "B"
+	} else {
+		match.Winner = "T"
+	}
+	err := web.arena.Database.SaveMatch(match)
+	if err != nil {
+		return err
+	}
+
+	if match.Type != "practice" {
+		// Regenerate the residual yellow cards that teams may carry.
+		tournament.CalculateTeamCards(web.arena.Database, match.Type)
+	}
+
+	if match.Type == "qualification" {
+		// Recalculate all the rankings.
+		err = tournament.CalculateRankings(web.arena.Database)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

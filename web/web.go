@@ -20,6 +20,9 @@ func NewWeb(arena *arena.Arena) *Web {
 }
 
 func (web *Web) ServeWebInterface(webPort int) {
+
+	go web.ServeSocketInterface(8000)
+
 	http.Handle("/res/", http.StripPrefix("/res/", http.FileServer(http.Dir("res/"))))
 	http.Handle("/", web.newHandler())
 

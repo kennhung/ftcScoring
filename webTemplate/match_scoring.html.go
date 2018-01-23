@@ -368,13 +368,13 @@ Match Scoring
                             <tr id="red2">
                                 <th scope="row" id="num">0</th>
                                 <td><label class="btn btn-dark">
-                                    <input type="checkbox" id="noShwo" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="noShwo" autocomplete="off">
                                 </label></td>
                                 <td><label class="btn btn-warning">
-                                    <input type="checkbox" id="yellowcard" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="yellowcard" autocomplete="off">
                                 </label></td>
                                 <td><label class="btn btn-danger">
-                                    <input type="checkbox" id="redcard" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="redcard" autocomplete="off">
                                 </label></td>
                             </tr>
                             </tbody>
@@ -594,25 +594,25 @@ Match Scoring
                             <tr id="blue1">
                                 <th scope="row" id="num">0</th>
                                 <td><label class="btn btn-dark">
-                                    <input type="checkbox" id="noShwo" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="noShwo" autocomplete="off">
                                 </label></td>
                                 <td><label class="btn btn-warning">
-                                    <input type="checkbox" id="yellowcard" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="yellowcard" autocomplete="off">
                                 </label></td>
                                 <td><label class="btn btn-danger">
-                                    <input type="checkbox" id="redcard" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="redcard" autocomplete="off">
                                 </label></td>
                             </tr>
                             <tr id="blue2">
                                 <th scope="row" id="num">0</th>
                                 <td><label class="btn btn-dark">
-                                    <input type="checkbox" id="noShwo" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="noShwo" autocomplete="off">
                                 </label></td>
                                 <td><label class="btn btn-warning">
-                                    <input type="checkbox" id="yellowcard" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="yellowcard" autocomplete="off">
                                 </label></td>
                                 <td><label class="btn btn-danger">
-                                    <input type="checkbox" id="redcard" autocomplete="off">
+                                    <input type="checkbox" class="btn-tog" id="redcard" autocomplete="off">
                                 </label></td>
                             </tr>
                             </tbody>

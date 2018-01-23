@@ -1,4 +1,4 @@
-package scheduling
+package tournament
 
 import (
 	"math/rand"

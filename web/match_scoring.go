@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"io"
 	"github.com/kennhung/ftcScoring/arena"
+	"strings"
+	"strconv"
 )
 
 func (web *Web) matchScoringHandler(w http.ResponseWriter, r *http.Request) {
@@ -139,6 +141,14 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 			}
 
 			web.arena.ScoringStatusChannel.Notify(nil)
+		case "updateRedScore":
+			strs := strings.Split(fmt.Sprint(data),":")
+			web.updateScore("Red",strs[0],strs[1])
+
+		case "updateBlueScore":
+			strs := strings.Split(fmt.Sprint(data),":")
+			web.updateScore("Blue",strs[0],strs[1])
+
 		default:
 			websocket.WriteError(fmt.Sprintf("Invalid message type '%s'.", messageType))
 			continue
@@ -148,7 +158,7 @@ func (web *Web) matchScoringWebsocketHandler(w http.ResponseWriter, r *http.Requ
 		data = struct {
 			RedScore  *play.Score
 			BlueScore *play.Score
-		}{}
+		}{web.arena.RedScore,web.arena.BlueScore}
 		err = websocket.Write("score", data)
 		if err != nil {
 			log.Printf("Websocket error: %s", err)
@@ -195,4 +205,54 @@ func (web *Web) getCurrentMatchResult() *model.MatchResult {
 	return &model.MatchResult{MatchId: web.arena.CurrentMatch.Id, MatchType: web.arena.CurrentMatch.Type,
 		RedScore: web.arena.RedScore, BlueScore: web.arena.BlueScore,
 		RedCards: RedCards, BlueCards: BlueCards}
+}
+
+func (web *Web) updateScore(color string, field string, data string){
+	score := new(play.Score)
+	if color == "Red"{//Red
+		score = web.arena.RedScore
+	} else if color == "Blue"{//Blue
+		score = web.arena.BlueScore
+	}
+
+	switch field {
+
+	//Autonomous Period
+	case "AutoJewels":
+		score.AutoJewels,_ =  strconv.Atoi(data)
+	case "AutoCryptobox":
+		score.AutoCryptobox,_ = strconv.Atoi(data)
+	case "CryptoboxKeys":
+		score.CryptoboxKeys,_ = strconv.Atoi(data)
+	case "RobotInSafeZone":
+		score.RobotInSafeZone,_ = strconv.Atoi(data)
+
+	//Driver-Controlled Period
+	case "Glyphs":
+		score.Glyphs,_ = strconv.Atoi(data)
+	case "ComRows":
+		score.ComRows,_ = strconv.Atoi(data)
+	case "ComColumns":
+		score.ComColumns,_ = strconv.Atoi(data)
+	case "ComCiphers":
+		score.ComCiphers,_ = strconv.Atoi(data)
+
+	//End Game Period
+	case "RelicsZ1":
+		score.RelicsZ1,_ = strconv.Atoi(data)
+	case "RelicsZ2":
+		score.RelicsZ2,_ = strconv.Atoi(data)
+	case "RelicsZ3":
+		score.RelicsZ3,_ = strconv.Atoi(data)
+	case "RelicsUpright":
+		score.RelicsUpright,_ = strconv.Atoi(data)
+	case "RobotBalanced":
+		score.RobotBalanced,_ = strconv.Atoi(data)
+
+	//Penalties
+	case "MinorPena":
+		score.Penalties[1],_ = strconv.Atoi(data)
+	case "MajorPena":
+		score.Penalties[0],_ = strconv.Atoi(data)
+	}
 }

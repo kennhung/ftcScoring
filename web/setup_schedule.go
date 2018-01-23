@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"bytes"
 	"github.com/kennhung/ftcScoring/webTemplate"
-	"github.com/kennhung/ftcScoring/scheduling"
+	"github.com/kennhung/ftcScoring/tournament"
 	"github.com/kennhung/ftcScoring/model"
 )
 
@@ -44,7 +44,7 @@ func (web *Web) setupschedulePOSTHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	matches, err := scheduling.BuildRandomSchedule(teams, 3, "practice")
+	matches, err := tournament.BuildRandomSchedule(teams, 3, "practice")
 	if err != nil {
 		handleWebErr(w, err)
 		return
