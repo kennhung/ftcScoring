@@ -12,13 +12,14 @@ import (
 
 // Renders the audience display to be chroma keyed over the video feed.
 func (web *Web) audienceDisplayHandler(w http.ResponseWriter, r *http.Request) {
-	buffer := new(bytes.Buffer)
+	buffer := new(bytes.Buffer) /*
 	if web.arena.EventSettings.DisplayOverlayMode {
 		template.Display_Audience_overlay(web.arena.EventSettings,buffer)
 	}else{
 		template.Display_Audience_NoOverlay(web.arena.EventSettings,buffer)
 	}
-
+*/
+	template.Display_Audience_NoOverlay(web.arena.EventSettings, buffer)
 	w.Write(buffer.Bytes())
 }
 

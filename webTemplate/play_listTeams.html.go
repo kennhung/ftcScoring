@@ -29,6 +29,12 @@ func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, mode 
         <th scope="col">Load</th>
 
         `)
+	} else if mode == 1 {
+		buffer.WriteString(`
+        <th scope="col">RedScore</th>
+        <th scope="col">BlueScore</th>
+        <th scope="col">Action</th>
+        `)
 	}
 	buffer.WriteString(`
     </tr>
@@ -92,10 +98,10 @@ func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, mode 
         <td>`)
 		hero.EscapeHTML(time, buffer)
 		buffer.WriteString(`</td>
-        <td>`)
+        <td class="text-danger">`)
 		hero.EscapeHTML(Red, buffer)
 		buffer.WriteString(`</td>
-        <td>`)
+        <td class="text-primary">`)
 		hero.EscapeHTML(Blue, buffer)
 		buffer.WriteString(`</td>
         `)
@@ -108,6 +114,17 @@ func Match_Play_ListTeams(matchs []model.Match, currentMatch *model.Match, mode 
 			buffer.WriteString(`" href="/match/play/`)
 			hero.EscapeHTML(matchID, buffer)
 			buffer.WriteString(`/load">Load</a></td>
+        `)
+		} else if mode == 1 {
+
+			buffer.WriteString(`
+        <td class="text-danger"></td>
+        <td class="text-primary"></td>
+        <td><a class="btn btn-primary btn-sm btn-load" id="`)
+			hero.EscapeHTML(matchID, buffer)
+			buffer.WriteString(`" href="/match/review/`)
+			hero.EscapeHTML(matchID, buffer)
+			buffer.WriteString(`/edit">Edit</a></td>
         `)
 		}
 		buffer.WriteString(`

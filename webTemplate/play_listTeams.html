@@ -19,7 +19,11 @@ import (
         %>
         <th scope="col">Load</th>
 
-        <%}%>
+        <%} else if mode == 1{%>
+        <th scope="col">RedScore</th>
+        <th scope="col">BlueScore</th>
+        <th scope="col">Action</th>
+        <% } %>
     </tr>
     </thead>
     <tbody>
@@ -74,12 +78,18 @@ import (
     <tr class="<%= classStr %>">
         <th scope="row"><%= matchName %></th>
         <td><%= time %></td>
-        <td><%= Red %></td>
-        <td><%= Blue %></td>
+        <td class="text-danger"><%= Red %></td>
+        <td class="text-primary"><%= Blue %></td>
         <%
         if mode == 0{
         %>
         <td><a class="btn btn-primary btn-sm btn-load" id="<%= matchID%>" href="/match/play/<%= matchID%>/load">Load</a></td>
+        <% } else if mode == 1 {
+
+        %>
+        <td class="text-danger"></td>
+        <td class="text-primary"></td>
+        <td><a class="btn btn-primary btn-sm btn-load" id="<%= matchID%>" href="/match/review/<%= matchID%>/edit">Edit</a></td>
         <% } %>
     </tr>
     <%

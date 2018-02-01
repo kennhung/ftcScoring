@@ -48,10 +48,13 @@ func (web *Web)newHandler() http.Handler {
 	router.HandleFunc("/match/play",web.matchPlayHandler).Methods("GET")
 	router.HandleFunc("/match/play/socket",web.matchPlayWebsocketHandler).Methods("GET")
 	router.HandleFunc("/match/play/{matchId}/load", web.matchPlayLoadHandler).Methods("GET")
+	router.HandleFunc("/match/review", web.matchReviewHandler).Methods("GET")
 	router.HandleFunc("/match/scoring", web.matchScoringHandler).Methods("GET")
 	router.HandleFunc("/match/scoring/websocket", web.matchScoringWebsocketHandler).Methods("GET")
 	router.HandleFunc("/display/audience", web.audienceDisplayHandler).Methods("GET")
 	router.HandleFunc("/displays/audience/websocket", web.audienceDisplayWebsocketHandler).Methods("GET")
+	router.HandleFunc("/match_review/{matchId}/edit", web.matchReviewEditGetHandler).Methods("GET")
+	router.HandleFunc("/match_review/{matchId}/edit", web.matchReviewEditPostHandler).Methods("POST")
 	return router
 }
 

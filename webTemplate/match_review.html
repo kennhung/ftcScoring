@@ -1,0 +1,52 @@
+<%: func Match_Review(eventSettings *model.EventSettings, allMatchs [3][]model.Match, currentMatch *model.Match, buffer *bytes.Buffer) %>
+
+<%~ "base.html" %>
+
+<%!
+import (
+"bytes"
+"fmt"
+"github.com/kennhung/ftcScoring/model"
+)
+%>
+
+
+<%@ scoring_scripts { %>
+
+<%} %>
+
+<%@ body { %>
+<div class="row">
+    <div class="col-lg-2">
+    </div>
+    <div class="col-lg">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="practiceNav" data-toggle="tab" href="#practice" role="tab"
+                   aria-controls="nav-practice" aria-selected="true">Home</a>
+                <a class="nav-item nav-link" id="qualificationNav" data-toggle="tab" href="#qualification" role="tab"
+                   aria-controls="nav-qualification" aria-selected="false">Qualification</a>
+                <a class="nav-item nav-link" id="eliminationNav" data-toggle="tab" href="#elimination" role="tab"
+                   aria-controls="nav-elimination" aria-selected="false">Playoff</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="practice" role="tabpanel" aria-labelledby="nav-practice-tab">
+                <% Match_Play_ListTeams(allMatchs[0],currentMatch,1,buffer) %>
+            </div>
+            <div class="tab-pane fade" id="qualification" role="tabpanel" aria-labelledby="nav-qualification-tab">
+                <% Match_Play_ListTeams(allMatchs[1],currentMatch,1,buffer) %>
+            </div>
+            <div class="tab-pane fade" id="elimination" role="tabpanel" aria-labelledby="nav-elimination-tab">
+                <% Match_Play_ListTeams(allMatchs[2],currentMatch,1,buffer) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<% } %>
+
+<%@ title { %>
+Match Review
+<% } %>
